@@ -1,0 +1,192 @@
+{
+
+	"all" : [ 
+		[ 13, 
+			[ 
+				{
+					"battery_A_current" : 1
+				},
+				{
+					"battery_B_current" : 1
+				},
+				{
+					"battery_C_current" : 1
+				},
+				{	
+					"battery_D_current" : 1
+				},
+				{
+					"battery_A_temp" : 1
+				},
+				{	
+					"battery_B_temp" : 1
+				},
+				{
+					"battery_C_temp" : 1
+				},
+				{
+					"battery_D_temp" : 1
+				},
+				{
+					"battery_A_voltage" : 1
+				},
+				{
+					"battery_B_voltage" : 1
+				},
+				{
+					"battery_C_voltage" : 1
+				},
+				{
+					"battery_D_voltage" : 1
+				},
+				{
+					"hub_A_rpm" : 1
+				},
+				{
+					"hub_B_rpm" : 1
+				},
+				{
+					"hub_C_rpm" : 1
+				},
+				{
+					"hub_D_rpm" : 1
+				},
+				{
+					"hub_A_current" : 1
+				},
+				{
+					"hub_B_current" : 1
+				},
+				{
+					"hub_C_current" : 1
+				},
+				{
+					"hub_D_current" : 1
+				},
+				{
+					"hub_A_voltage" : 1
+				},
+				{
+					"hub_B_voltage" : 1
+				},
+				{
+					"hub_C_voltage" : 1
+				},
+				{
+					"hub_D_voltage" : 1
+				},
+				{
+					"hover_A_rpm" : 1
+				},
+				{
+					"hover_B_rpm" : 1
+				},
+				{
+					"hover_C_rpm" : 1
+				},
+				{
+					"hover_D_rpm" : 1
+				},
+				{
+					"hover_A_current" : 1
+				},
+				{
+					"hover_B_current" : 1
+				},
+				{
+					"hover_C_current" : 1
+				},
+				{
+					"hover_D_current" : 1
+				},
+				{
+					"hover_A_voltage" : 1
+				},
+				{
+					"hover_B_voltage" : 1
+				},
+				{
+					"hover_C_voltage" : 1
+				},
+				{
+					"hover_D_voltage" : 1
+				},
+				{
+					"hover_controller_A_temp" : 1
+				},
+				{
+					"hover_controller_B_temp" : 1
+				},
+				{
+					"hover_controller_C_temp" : 1
+				},
+				{
+					"hover_controller_D_temp" : 1
+				}
+			]
+		],
+		[ 54, 
+			[{
+
+			}] 
+		]
+
+	],
+	"3" : [
+		[ 16, 
+			[
+				{
+					"manual_enter_state_16_ready_2" : 1
+				}
+			]
+		]
+	],
+
+
+	"16" : [
+		[ 4,
+			[
+				{
+					"manual_enter_state_4_accel_1" : 1
+				}
+			]
+		]
+	],
+	
+	"4" : [
+		[ 5, 
+			[
+				{
+					"first_stopping_point_reached" : 1
+				}
+			]
+		]
+	],
+	"5" : [
+		[ 7, 
+			[
+				{
+					"pod_completely_stopped" : 1
+				}
+			]
+		]
+	],
+	"7" : [
+		[ 8, 
+			[
+				{
+					"pod_completely_stopped" : 1
+				}
+			]
+		]
+	],
+	"13" : [
+		[ 1,
+			[
+				{
+					"Emergency_Override" : 1
+				}
+			]   
+		]
+	]
+}
