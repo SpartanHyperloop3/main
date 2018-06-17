@@ -1,0 +1,139 @@
+{ 
+	"thread1" : [	
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.01
+		},
+		{
+			"PI_1_U1_CH1" : {
+				"location" : 105, 
+				"write" : [],
+				"read" : [16],
+				"data_length" : "block",
+				"data_type" : "pos",
+				"operations" : "R",
+				"data_processing_callback" : {
+					"function" : "ADCtoVolts12Bit",
+					"args" : []
+				}
+			}
+		}
+	],
+   "thread2" : [	
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.01
+		},
+		{
+			"PI_1_U1_CH2" : {
+				"location" : 105, 
+				"write" : [],
+				"read" : [48],
+				"data_length" : "block",
+				"operations" : "R",
+				"data_type" : "pos",
+				"data_processing_callback" : {
+					"function" : "ADCtoVolts12Bit",
+					"args" : []
+				}
+			}
+		}
+	],  
+	"thread3" : [
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.01
+		},
+		{
+			"PI_1_U1_CH3" : {
+				"location" : 105, 
+				"write" : [],
+				"read" : [80],
+				"data_length" : "block",
+				"operations" : "R",
+				"data_type" : "pos",	
+				"data_processing_callback" : {
+					"function" : "ADCtoVolts12Bit",
+					"args" : []
+				}
+			}
+		}
+	],   
+	"thread4" : [
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.01
+		},
+		{
+			"PI_1_U1_CH4" : {
+				"location" : 105, 
+				"write" : [],
+				"read" : [112],
+				"data_length" : "block",
+				"operations" : "R",
+				"data_type" : "pos",	
+				"data_processing_callback" : {
+					"function" : "ADCtoVolts12Bit",
+					"args" : []
+				}
+			}
+		}
+	],
+	"thread6" : [
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.1,
+			"init" : [
+				{
+					"location" : 104,
+					"register" : 107, 
+					"data" : 0
+				},
+				{
+					"location" : 104,
+					"register" : 28, 
+					"data" : 0
+				}
+			]
+		},
+		{
+			"PI_1_Accelerometer_X" : {
+				"location" : 104,
+				"write" : [],
+				"read" : [59],
+				"data_length" : "word",
+				"operations" : "R",
+				"data_type" : "2c",	
+				"data_processing_callback" : {
+					"function" : "convertAccel",
+					"args" : [16384.0]
+				}
+			},
+			"PI_1_Accelerometer_Y" : {
+				"location" : 104,
+				"write" : [],
+				"read" : [61],
+				"data_length" : "word",
+				"operations" : "R",
+				"data_type" : "2c",
+				"data_processing_callback" : {
+					"function" : "convertAccel",
+					"args" : [16384.0]
+				} 
+			},
+			"PI_1_Accelerometer_Z" : {
+				"location" : 104,
+				"write" : [],
+				"read" : [63],
+				"data_length" : "word",
+				"operations" : "R",
+				"data_type" : "2c",
+				"data_processing_callback" : {
+					"function" : "convertAccel",
+					"args" : [16384.0]
+				} 
+			}
+			
+		}
+	]
+}
