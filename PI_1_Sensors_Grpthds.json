@@ -7,7 +7,7 @@
 		{
 			"PI_1_U1_CH1" : {
 				"location" : 105, 
-				"write" : [],
+				"write" : [[23,100],[24]],
 				"read" : [16],
 				"data_length" : "block",
 				"data_type" : "pos",
@@ -105,7 +105,7 @@
 				"operations" : "R",
 				"data_type" : "2c",	
 				"data_processing_callback" : {
-					"function" : "convertAccel",
+					"function" : "convertByLSB",
 					"args" : [16384.0]
 				}
 			},
@@ -117,7 +117,7 @@
 				"operations" : "R",
 				"data_type" : "2c",
 				"data_processing_callback" : {
-					"function" : "convertAccel",
+					"function" : "convertByLSB",
 					"args" : [16384.0]
 				} 
 			},
@@ -129,7 +129,7 @@
 				"operations" : "R",
 				"data_type" : "2c",
 				"data_processing_callback" : {
-					"function" : "convertAccel",
+					"function" : "convertByLSB",
 					"args" : [16384.0]
 				} 
 			}

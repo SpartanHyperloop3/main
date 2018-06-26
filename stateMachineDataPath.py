@@ -10,7 +10,7 @@ import RPi.GPIO as GPIO
 import smbus
 import Queue
 import dataController
-import subprocess
+import pdb
 
 class stateMachineDataPath(object):
     """Sets the outputs based on state and reports feedback.
@@ -27,7 +27,7 @@ class stateMachineDataPath(object):
         an event in outer class stateMachineDataPath (currentStateHasChanged)
         is set to notify the outputsThread that the states has changed.
         """
-        def __init__(self, control, zmqSock):
+        def __init__(self, control, zmqSock, incomingDataQueue):
             """incomingDataThread constructor.
 
             Initializes dataThread
@@ -43,26 +43,55 @@ class stateMachineDataPath(object):
             self.sock = zmqSock
             self.poller = zmq.Poller()
             self.poller.register(self.sock, zmq.POLLIN)
+            self.queue = incomingDataQueue
 
         def run(self):
             while not self._killFlagIn.is_set():
                 if self.poller.poll(1000):
                     message = self.sock.recv_json()
-                    if message[0] == "state":
-                        self.control.currentState = message[1]
-                        self.control.currentStateHasChanged.set()
-                        self.control._killFuncs.set()
-                    elif message[0] == "cmd":
-                        pass
+                    self.queue.put(message)
+
+
 
         def stop(self):
             self._killFlagIn.set()
 
 
+
+
+    class outgoingDataThread(threading.Thread):
+
+        def __init__(self, control, zmqSock, outgoingDataQueue):
+            threading.Thread.__init__(self)
+            self._killFlag = threading.Event()
+            self.control = control
+            self.name = "data_send_thread"
+            self.sock = zmqSock
+            self.poller = zmq.Poller()
+            self.poller.register(self.sock, zmq.POLLOUT)
+            self.queue = outgoingDataQueue
+
+        def run(self):
+            while not self._killFlag.is_set():
+                if self.poller.poll(1000):
+                    try:
+                        data = self.queue.get(True, 2.0)
+                    except Queue.Empty:
+                        pass
+                    else:
+                        self.sock.send_json(data)
+
+        def stop(self):
+            self._killFlag.set()
+
+
+
+
+
     class outputsThread(threading.Thread):
         """Controls setting outputs on state updates
 
-        Waits fro currentStateHasChanged event to be set then sets outputs
+        Waits for currentStateHasChanged event to be set then sets outputs
         according to the state.
         """
         def __init__(self, control):
@@ -71,14 +100,26 @@ class stateMachineDataPath(object):
             self.control = control
             self.name = "output_control"
 
+
         def run(self):
             while not self._killFlagOut.is_set():
-                if self.control.currentStateHasChanged.wait(5.0):
-                    self.control.currentStateHasChanged.clear()
-                    self.control.setOutputsByState()
+                try:
+                    data = self.queue.get(True, 2.0)
+                except Queue.Empty:
+                    pass
+                else:
+                    if message[0] == "state":
+                        self.control.currentState = message[1]
+                        self.control.setOutputsByState()
+                    elif message[0] == "cmd":
+                        pass
+
 
         def stop(self):
             self._killFlagOut.set()
+
+
+
 
 
     class I2Cconsumer(threading.Thread):
@@ -97,10 +138,6 @@ class stateMachineDataPath(object):
 
 
         def run(self):
-            #switch = {
-            #    0 : self.getI2Creading(),
-            #    1 : self.updateAndSendADCreading(next)
-            #}
             while not self._killFlag.is_set():
                 try:
                     nextJob = self.queue.get(True, 2.0)
@@ -117,17 +154,14 @@ class stateMachineDataPath(object):
                         timeOfReading = time.time()
                         packet = [nextJob["sensor_name"], self.reading, timeOfReading]
                         self.control.rawData.updateEntry(nextJob["sensor_name"], [self.reading, timeOfReading])
-                        with globalLock:
-                            self.control.sendData(packet)
+                        self.control.sendQueue.put(packet)
 
                     elif nextJob["operations"] == "R":
                         self.reading = self.readOps(nextJob)
                         timeOfReading = time.time()
                         packet = [nextJob["sensor_name"], self.reading, timeOfReading]
                         self.control.rawData.updateEntry(nextJob["sensor_name"], [self.reading, timeOfReading])
-                        with globalLock:
-                            self.control.sendData(packet)
-
+                        self.control.sendQueue.put(packet)
 
                     elif nextJob["operations"] == "W":
                         self.writeOps(nextJob)
@@ -137,7 +171,9 @@ class stateMachineDataPath(object):
 
 
 
-
+        ########################################################
+        # I2C Bus read functions                               #
+        ########################################################
         def readByteData(self, nextJob):
             bus = smbus.SMBus(1)
             result = bus.read_byte_data(nextJob["address"], nextJob["read"][0])
@@ -175,17 +211,10 @@ class stateMachineDataPath(object):
                     byte = -((byte^0xff)+1)
             return data
 
-        def ADCtoVolts12Bit(self, reading):
-            upper = (reading[0] & 15)
-            upper = (upper << 8)
-            total = upper + reading[1]
-            voltage = float(total * .001)
-            return voltage
 
-        def convertAccel(self, reading, lsb):
-            result = reading/lsb
-            return result
-
+        ########################################################
+        # I2C Bus write functions                              #
+        ########################################################
         def writeByte(self, addr, data):
             bus = smbus.SMBus(1)
             bus.write_byte(addr, data)
@@ -195,14 +224,23 @@ class stateMachineDataPath(object):
             bus.write_byte_data(addr, cmd, data)
 
 
+
+        ############################################################
+        # R/W automation functions
+        ############################################################
         def writeOps(self, nextJob):
-            pass
+            for writeData in nextJob["write"]:
+                if len(writeData) == 2:
+                    self.writeByteData(nextJob["address"], writeData[0], writeData[1])
+                elif len(writeData) == 1:
+                    self.writeByte(nextJob["address"], writeData[0])
+
 
         def readOps(self, nextJob):
             if nextJob["data_length"] == "byte":
                 if nextJob["data_type"] == "2c":
                     reading = self.readByte2C(nextJob)
-                    reading = getattr(self, nextJob["callback"])(reading)
+                    reading = getattr(self, nextJob["callback"]["function"])(reading,*nextJob["callback"]["args"])
 
                 elif nextJob["data_type"] == "pos":
                     reading = self.readByte(nextJob)
@@ -227,6 +265,21 @@ class stateMachineDataPath(object):
                     reading = getattr(self, nextJob["callback"]["function"])(reading,*nextJob["callback"]["args"])
 
             return reading
+
+
+        #################################################
+        # data processing callback functions start here #
+        #################################################
+        def ADCtoVolts12Bit(self, reading):
+            upper = (reading[0] & 15)
+            upper = (upper << 8)
+            total = upper + reading[1]
+            voltage = float(total * .001)
+            return voltage
+
+        def convertByLSB(self, reading, lsb):
+            result = reading/lsb
+            return result
 
 
         def stop(self):
@@ -326,9 +379,10 @@ class stateMachineDataPath(object):
         self.I2Cqueue = Queue.Queue()
         self.I2CconsumerThread = self.I2Cconsumer(self, self.I2Cqueue)
         self.rawData = dataController.dataController()
+        self.sendQueue = Queue.Queue()
 
+        self.outgoingDataThread = self.outgoingDataThread(self, self.outgoingSocket, self.sendQueue)
         self.manualMode = 0
-        self._killFuncs = threading.Event()
 
         self.incomingDataThread = self.incomingDataThread(self, self.incomingSocket)
         self.outputsThread = self.outputsThread(self)
@@ -415,15 +469,14 @@ class stateMachineDataPath(object):
                 print "Current state of pin %s is: %s\n"%(output[0],GPIO.input(output[0]))
 
             for func in self.outputFunctionsByState["%s"%self.currentState]:
-                if func["threaded"] == 1:
-                    t = self.functionThread(self, func["name"], func["arguments"])
-                    t.start()
-                else:
+                if func["threaded"] == 0:
                     self.startFunc(func["name"], func["arguments"])
 
+            for pwm in self.outputsPWMbyState["%s"%self.currentState]:
+                self.PWMobjects[pwm[0]].ChangeDutyCycle(pwm[2])
 
         except KeyError:
-            print "No state in JSON file"
+            print "State number not in JSON file"
 
 
 
@@ -439,9 +492,20 @@ class stateMachineDataPath(object):
 
         for key,val in self.digitalInputs.items():
             GPIO.setup(val["location"], GPIO.IN, pull_up_down=getattr(GPIO, val["PUD"]) )
-            GPIO.add_event_detect(val["location"], GPIO.RISING, bouncetime=200)
-            cb = lambda channel, arg1 = key, arg2 = 1: self.GPIOevent(arg1, arg2)
-            GPIO.add_event_callback(val["location"], cb)
+            t = self.functionThread(self, "buttonWatch", [val["location"], key])
+            t.start()
+            #GPIO.add_event_detect(val["location"], GPIO.RISING, bouncetime=200)
+            #GPIO.add_event_callback(val["location"], lambda channel, arg1 = key, arg2 = 1: self.GPIOevent(arg1, arg2))
+
+
+    def buttonWatch(self, pin, varName):
+        while True:
+            if not GPIO.input(pin):
+                self.sendQueue.put([varName,1,time.time()])
+                time.sleep(1)
+
+            time.sleep(0.001)
+
 
 
     def initializeOutputs(self):
@@ -454,12 +518,17 @@ class stateMachineDataPath(object):
             self.PWMobjects[pwm[0]] = GPIO.PWM(pwm[0],pwm[1])
             #start PWM at 0% duty cycle
             self.PWMobjects[pwm[0]].start(0)
-        print self.PWMobjects
 
+        for obj in self.outputFunctionsByState.values():
+            for func in obj:
+                if func["threaded"] == 1:
+                    t = self.functionThread(self, func["name"], func["arguments"])
+                    t.start()
 
 
     def startThreads(self):
         self.incomingDataThread.start()
+        self.outgoingDataThread.start()
         self.outputsThread.start()
         self.I2CconsumerThread.start()
         for thread in self.I2Cthreads:
@@ -468,12 +537,6 @@ class stateMachineDataPath(object):
 
     def stopThreads(self):
         print "Killing ADC consumer thread.."
-        #for t in self.ADCthreads:
-        #    print threading.active_count()
-        #    print t.getName()
-        #    t.stop()
-        #    t.join()
-        #    print "done.."
         print "done.."
         self.I2CconsumerThread.stop()
         self.I2CconsumerThread.join()
@@ -484,12 +547,14 @@ class stateMachineDataPath(object):
         print "killng incoming data thread.."
         self.incomingDataThread.stop()
         self.incomingDataThread.join()
+        print "done.."
+        print "killng outgoing data thread.."
+        self.outgoingDataThread.stop()
+        self.outgoingDataThread.join()
         print "done..goodbye"
 
 
 
-    def setGPIOlistener(self, pin):
-        pass
 
     def manualCmd(self):
         pass
@@ -512,59 +577,27 @@ class stateMachineDataPath(object):
 
 
 
-    def accelerationSetPoint(self, input1, input2):
-        """Test func"""
-        print "Setting Acceleration"
-
     def map(self, x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+
 
     def PWMtest(self):
         print "starting PWM test..."
         #while self.currentState == 2:
-        self._killFuncs.clear()
-
-        self.PWMobjects[14].ChangeDutyCycle(11)
+        #self.PWMobjects[14].ChangeDutyCycle(11)
         while True:
-            if self._killFuncs.is_set():
-                self.PWMobjects[14].ChangeDutyCycle(0)
-                self._killFuncs.clear()
-                return
-            #obj = getattr(self, self.PWMobjects["14"])
-            #obj = self.PWMobjects[14]
-           # self.PWMobjects[14].ChangeDutyCycle(dc)
-           # for dc in range(0, 101, 5):
-            #    if self._killFuncs.is_set():
-             #       self.PWMobjects[14].ChangeDutyCycle(0)
-              #      self._killFuncs.clear()
-               #     return
-                #obj = getattr(self, self.PWMobjects["14"])
-                #obj = self.PWMobjects[14]
-               # self.PWMobjects[14].ChangeDutyCycle(dc)
-                #obj.ChangeDutyCycle(dc)
-                time.sleep(0.1)
+            pass
+            #while self.currentState == 1:
+            #    for dc in range(0, 101, 5):
+            #        self.PWMobjects[14].ChangeDutyCycle(dc)
+            #        time.sleep(0.1)
 
+            #self.PWMobjects[14].ChangeDutyCycle(0)
 
 
     def startFunc(self, name, args):
         """Starts a function"""
         getattr(self, name)(*args)
-
-
-
-    def GPIOevent(self, arg1, arg2):
-        """Called when a GPIO event occurs.
-
-        Args:
-            arg1: sensor or input name.
-            arg2: sensor or input reading.
-        """
-        self.sendData([arg1,arg2,time.time()])
-
-
-
-    def sendData(self, data):
-        self.outgoingSocket.send_json(data)
 
 
 
@@ -607,6 +640,8 @@ if __name__ == "__main__":
     dataPath.initializeInputsAndSensors()
     dataPath.initializeOutputs()
     dataPath.startThreads()
+
+    print "Enter 1 to exit.."
 
     while True:
         try:
