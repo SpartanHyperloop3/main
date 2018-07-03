@@ -91,6 +91,7 @@ for n in range(0,round(total_length/index_leap)):
     print('plot: %.5f' % (plot_end - plot_start))
     time.sleep(.5)
 
+'''
 def makePlot():
     plt.subplot(231)
     plt.plot(x[0],'r')
@@ -119,7 +120,6 @@ def makePlot():
     #wm = plt.get_current_fig_manager()
     #wm.window.state('zoomed')
 
-'''
 for i in range(0,100):  #time
     time.sleep(0.001)
     for s in range(0,sensors):
