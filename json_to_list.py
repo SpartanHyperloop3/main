@@ -45,50 +45,29 @@ print(len(s1[0]), len(s2[1]), len(s3), len(s4))
 print(sensor_names)
 print(sensor_readings)
 
-print(s1[0])
-if len(s1[0]) > 5:
-    s1[0].pop(0)
-print(s1[0])
-#print(sensor_readings['name1'])
-print(s1[1])
-if s1[1][-1] - s1[1][0] == 0:
-    s1[1].pop(0)
-    s1[0].pop(0)
-print(s1[1])
-print(s1[0])
+sensors_json = [s1, s2, s3, s4]
 
-print(s2[0])
-if len(s2[0]) > 5:
-    s2[0].pop(0)
-print(s2[0])
-#print(sensor_readings['name1'])
-print(s2[1])
-if s2[1][-1] - s2[1][0] == 0:
-    s2[1].pop(0)
-    s2[0].pop(0)
-print(s2[1])
-print(s2[0])
+print(sensor_names)
+print(sensor1)
+print(s1)
+print(sensors_json)
 
-print(s3[0])
-if len(s3[0]) > 5:
-    s3[0].pop(0)
-print(s3[0])
-#print(sensor_readings['name1'])
-print(s3[1])
-if s3[1][-1] - s3[1][0] == 0:
-    s3[1].pop(0)
-    s3[0].pop(0)
-print(s3[1])
-print(s3[0])
+print("keeping time constant, can make diff lists for similar refresh rates")
+for s in sensors_json:
+    print(s[1])
+    print(s[0])
+    if s[1][-1] - s[1][0] == 0:
+        s[1].pop(0)
+        s[0].pop(0)
+    print(s[1])
+    print(s[0])
 
-print(s4[0])
-if len(s4[0]) > 5:
-    s4[0].pop(0)
-print(s4[0])
-#print(sensor_readings['name1'])
-print(s4[1])
-if s4[1][-1] - s4[1][0] == 0:
-    s4[1].pop(0)
-    s4[0].pop(0)
-print(s4[1])
-print(s4[0])
+print("keeping number of elements constant, can make diff lists for similar refresh rates")
+for s in sensors_json:
+    print(s[1])
+    print(s[0])
+    if len(s[0]) > 5:
+        s[1].pop(0)
+        s[0].pop(0)
+    print(s[1])
+    print(s[0])
