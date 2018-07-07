@@ -83,7 +83,7 @@ class ControlButtonGUI:
 
     def emergency(self):
         print("Sending state 13")
-        socket.send_json(["Emergency Shutdown", Value, time])
+        socket.send_json(["Emergency Shutdown", 1, 0])
 
 root = Tk()
 my_gui = ControlButtonGUI(root)
