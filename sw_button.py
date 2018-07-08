@@ -9,11 +9,13 @@ from tkinter import Tk, Label, Button
 import sys
 import zmq
 import time
+import datetime
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
 socket.bind('tcp://127.0.0.1:5000')             #enter master ip, at port 5000
 
+Value = 1
 
 class ControlButtonGUI:
     def __init__(self, master):
@@ -54,36 +56,60 @@ class ControlButtonGUI:
 
     def test_sensors(self):
         print("Sending state 1")
+        timenow = datetime.datetime.now()
+        time = str(timenow)
+        print(time)
         socket.send_json(["Initialize and Test Sensors", Value, time])               
 
 
     def test_actuators(self):
         print("Sending state 14")
+        timenow = datetime.datetime.now()
+        time = str(timenow)
+        print(time)
         socket.send_json(["Initialize and Test Actuators", Value, time])                        
 
     def enter_track(self):
         print("Sending state 2")
+        timenow = datetime.datetime.now()
+        time = str(timenow)
+        print(time)
         socket.send_json(["Enter Track", Value, time])
 
     def exit_track(self):
         print("Sending state 10")
+        timenow = datetime.datetime.now()
+        time = str(timenow)
+        print(time)
         socket.send_json(["Exit Track", Value, time])
 
     def shutdown(self):
         print("Sendinng state 11")
+        timenow = datetime.datetime.now()
+        time = str(timenow)
+        print(time)
         socket.send_json(["Shutdown", Value, time])
 
     def wait(self):
         print("Sending state 17")
+        timenow = datetime.datetime.now()
+        time = str(timenow)
+        print(time)
         socket.send_json(["Waiting", Value, time])
 
     def manual_operation(self):
         print("Sending state 54")
+        timenow = datetime.datetime.now()
+        time = str(timenow)
+        print(time)
         socket.send_json(["Manual Operation Mode", Value, time])
 
     def emergency(self):
         print("Sending state 13")
-        socket.send_json(["Emergency Shutdown", 1, 0])
+        timenow = datetime.datetime.now()
+        time = str(timenow)
+        print(time)
+        socket.send_json(["Emergency Shutdown", Value, time])
 
 root = Tk()
 my_gui = ControlButtonGUI(root)
