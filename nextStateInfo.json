@@ -4,6 +4,15 @@
 		[ 13, 
 			[ 
 				{
+					"test1" : 1,
+					"Emergency_Override" : 1,
+					"battery_A_current" : 1
+				},
+				{
+					"test2" : 1,
+					"battery_A_current" : 1
+				},
+				{
 					"battery_A_current" : 1
 				},
 				{
@@ -126,9 +135,11 @@
 			]
 		],
 		[ 54, 
-			[{
-
-			}] 
+			[
+				{
+					"Enter_Manual_State" : 1
+				}
+			] 
 		]
 
 	],

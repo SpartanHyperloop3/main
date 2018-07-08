@@ -12,7 +12,7 @@
             "typeOfLogic": "boolean_XOR"
         }
     ],
-    "battery_A_current": [
+    "test1": [
         0,
         {
             "raw_data_names": {
@@ -28,11 +28,43 @@
             "typeOfLogic": "range"
         }
     ],
-    "battery_A_temp": [
+    "test2": [
         0,
         {
             "raw_data_names": {
                 "PI_1_U1_CH2": {
+                    "digital": 0,
+                    "params": [
+                        0.0,
+                        1.0
+                    ],
+                    "raw_data_units": "volts"
+                }
+            },
+            "typeOfLogic": "range"
+        }
+    ],
+    "battery_A_current": [
+        0,
+        {
+            "raw_data_names": {
+                "PI_1_U1_CH4": {
+                    "digital": 0,
+                    "params": [
+                        0.0,
+                        1.0
+                    ],
+                    "raw_data_units": "volts"
+                }
+            },
+            "typeOfLogic": "range"
+        }
+    ],
+    "battery_A_temp": [
+        0,
+        {
+            "raw_data_names": {
+                "PI_1_U1_CH4": {
                     "digital": 0,
                     "params": [
                         0,
@@ -64,7 +96,7 @@
         0,
         {
             "raw_data_names": {
-                "PI_1_U1_CH1": {
+                "PI_1_U1_CH4": {
                     "digital": 0,
                     "params": [
                         0.0,
@@ -728,5 +760,18 @@
             },
             "typeOfLogic": "range"
         }
-    ]
+    ],
+	"Enter_Manual_State" : [
+		0,
+		{
+			"raw_data_names": {
+				"Enter_Manual_State" : {
+					"digital": 1,
+					"params": null,
+					"raw_data_units": "bool"
+				}
+			},
+			"typeOfLogic": "boolean_XOR"
+		}
+	]
 }

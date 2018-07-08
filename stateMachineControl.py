@@ -9,6 +9,7 @@ import Queue
 import logging
 import copy
 import datetime
+import pdb
 
 logging.basicConfig(level=logging.DEBUG,
                    format='(%(threadName)-10s) %(message)s',)
@@ -57,15 +58,13 @@ class stateMachineControl(object):
             while not self._killFlag.is_set():
                 if self.poller.poll(1000):
                     message = self.sock.recv_json()
-                    #print self.control.rawData.getCurrentReadingFor("PI_1_U1_CH4")
-                    #print self.control.rawData.getCurrentTimeForAsc("PI_1_U1_CH1")
-                    #print self.control.rawDataUnits["PI_1_U1_CH1"]
-                    self.control.sendDataToControlStation(self.sock)
+                    #self.control.sendDataToControlStation(self.sock)
                     self.control.rawData.updateEntry(message[0], [message[1], message[2]])
-
-                    #print self.control.rawData.getCurrentReadingFor(message[0])
                     self.control.inputLogicQueue.put(message[0])
-
+                    if message[0] == "Emergency_Override":
+                        print message[0],message[1]
+                    #elif message[0] == "PI_1_U1_CH1":
+                    #    print message[0], message[1]
 
 
         def stop(self):
@@ -77,10 +76,10 @@ class stateMachineControl(object):
         """reads sensor names from the work queue and updates logic if necessary.
 
         Runs in the background retrieving the names of sensors currently updated
-        by the incomingDataThread. Only the name is needed to retrieve the most 
-        current entry by using methods of the dataController class. The sensor 
+        by the incomingDataThread. Only the name is needed to retrieve the most
+        current entry by using methods of the dataController class. The sensor
         reading is ran through logic that has been predetermined in a corresponding
-        JSON initialization file. If the current logic entry associated with the 
+        JSON initialization file. If the current logic entry associated with the
         sensor reading has updated an event is set to notify the next thread to
         evaluate if the new logic signifies a state change.
         """
@@ -96,14 +95,19 @@ class stateMachineControl(object):
         def run(self):
             while not self._killFlag.is_set():
                 try:
+                    slaveState = self.control.updateSlaveStateQueue.get(False)
+                except Queue.Empty:
+                    pass
+                try:
                     dataName = self.control.inputLogicQueue.get(True, 1.0)
                     inputStateNameList = self.control.inputLogicNameByDataName[dataName]
 
                     for inputStateName in inputStateNameList:
                         #print self.control.rawData.getCurrentReadingFor("PI_1_U1_CH1")
                         if self.control.setStateInputLogic(inputStateName, dataName):
-                            #print self.control.rawData.getCurrentReadingFor("PI_1_U1_CH1")
+                            #print self.control.rawData.getCurrentReadingFor(inputStateName)
                             #print self.control.currentState
+                            #print "got here"
                             self.control.inputLogicHasBeenUpdated.set()
                     self.control.inputLogicQueue.task_done()
 
@@ -115,9 +119,40 @@ class stateMachineControl(object):
 
 
 
+    class slaveStateConsumerThread(threading.Thread):
+
+        def __init__(self, control):
+            """consumerThread constructor.
+
+            Args:
+                control: must pass outer class object to obtain access to methods.
+            """
+            threading.Thread.__init__(self)
+            self._killFlag = threading.Event()
+            self.control = control
+        def run(self):
+            while not self._killFlag.is_set():
+                try:
+                    slaveState = self.control.updateSlaveStateQueue.get(True, 1.0)
+                except Queue.Empty:
+                    pass
+                else:
+                    self.updateSlaveState(slaveState)
+                    self.checkAllSlaveStates() 
+
+
+        def updateSlaveState(self, SlaveState):
+            pass
+
+
+        def stop(self):
+            self._killFlag.set()
+
+
+
     class updateStateThread(threading.Thread):
         """Reevaluates current state based on logic.
-        
+
         Waits for the inputLogicHasBeenUpdated event to be set by consumerThread
         which signifies a change in a logic variable. Once the event is set the
         fucntion setNextState of the outer controller class is called to reevaluate
@@ -139,8 +174,8 @@ class stateMachineControl(object):
                 if self.control.inputLogicHasBeenUpdated.wait(5.0):
                     self.control.inputLogicHasBeenUpdated.clear()
                     if self.control.setNextState():
-                        print "got here"
-                        self.control.stateHasChanged.set()
+                        #self.control.stateHasChanged.set()
+                        self.control.broadcastStateQueue.put(["state", self.control.currentState])
 
         def stop(self):
             self._killFlag.set()
@@ -155,7 +190,7 @@ class stateMachineControl(object):
         If the thread is notified of a state change the new state is sent out
         to all clients.
         """
-        def __init__(self, control, zmqSock):
+        def __init__(self, control, zmqSock, broadcastStateQueue):
             """broadcastStateThread constructor.
 
             Args:
@@ -168,14 +203,23 @@ class stateMachineControl(object):
             self.sock = zmqSock
             self.poller = zmq.Poller()
             self.poller.register(self.sock, zmq.POLLOUT)
+            self.queue = broadcastStateQueue
 
         def run(self):
             while not self._killFlag.is_set():
-                if self.control.stateHasChanged.wait(5.0):
-                    self.control.stateHasChanged.clear()
+                try:
+                    dataToSend = self.queue.get(True, 1.0)
+                except Queue.Empty:
+                    pass
+                else:
+                #if self.control.stateHasChanged.wait(5.0):
+                #    self.control.stateHasChanged.clear()
                     print "state has changed - sending to slaves - Current State: %s" %self.control.currentState
                     if self.poller.poll(1000):
-                        self.sock.send_json(["state", self.control.currentState])
+                        #self.sock.send_json(["state", self.control.currentState])
+                        print "sent",dataToSend
+                        self.sock.send_json(dataToSend)
+                    self.queue.task_done()
 
         def stop(self):
             self._killFlag.set()
@@ -216,10 +260,17 @@ class stateMachineControl(object):
         #work queue
         self.inputLogicQueue = Queue.Queue()
 
+        self.broadcastStateQueue = Queue.Queue()
+
+        self.updateSlaveStateQueue = Queue.Queue()
+
+        self.connections = {
+
+        }
         #initialize threads
         self.consumerThread = self.consumerThread(self)
         self.incomingDataThread = self.incomingDataThread(self, incomingSocket)
-        self.broadcastStateThread = self.broadcastStateThread(self, outgoingSocket)
+        self.broadcastStateThread = self.broadcastStateThread(self, outgoingSocket, self.broadcastStateQueue)
         self.stateUpdateThread = self.updateStateThread(self)
 
         #sockets
@@ -289,7 +340,7 @@ class stateMachineControl(object):
                     self.rawDataUnits[sensor] = properties["raw_data_units"]
                 if not val[1]["raw_data_names"]:
                     self.rawDataUnits[key] = "none"
-
+            print self.rawDataUnits
             #inputLogicParams holds the parameters for the logic type. For example,
             #a list of 2 numbers is used for the upper and lower bounds of a range
             #logic type
@@ -346,7 +397,6 @@ class stateMachineControl(object):
                 self.rawData.createNewEntry(sensor)
 
 
-
     def startThreads(self):
         """Starts all threads, called in main"""
         self.consumerThread.start()
@@ -354,7 +404,9 @@ class stateMachineControl(object):
         self.stateUpdateThread.start()
         self.broadcastStateThread.start()
 
-
+    def updateState(self, state):
+        self.currentState = state
+        self.broadcastStateQueue.put(["state", state])
 
     def stopThreads(self):
         """stops all threads"""
@@ -404,17 +456,20 @@ class stateMachineControl(object):
                     currLogic = self.stateTransitionLogic["all+%s"%(goto)]
                 except KeyError as e:
                     print "Invalid Transistion Request"
-                    return
+                    return False
 
                 #if not currLogic:
-                result = 0
                 #print currLogic
                 for possibilities in currLogic:
-                    #print possibilities
+                    result = 1
+                    #evaluate AND logic
                     for key,val in possibilities.items():
-                        if (self.inputLogicState[key] == val):
-                            result = 1
-                #if the an all state transition is to take place and the current
+                        if (self.inputLogicState[key] != val):
+                            result = 0
+                    #if the result is true no need to continue evaluating OR logic
+                    if result == 1:
+                        break
+                #if the all state transition is to take place and the current
                 #state doesn't already equal that state return true to signal a
                 #state change
                 if result == 1 and self.currentState != goto:
@@ -443,16 +498,15 @@ class stateMachineControl(object):
                     print "Invalid Transistion Request"
                     return
 
-                #if not currLogic:
-                result = 0
-
                 for possibilities in currLogic:
-                    #result = 1
+                    result = 1
                     for key,val in possibilities.items():
-                        if (self.inputLogicState[key] == val):
-                            #print self.inputLogicState[key]
-                        #if (self.inputLogicState[key] & val) == 0:
-                            result = 1
+                        if (self.inputLogicState[key] != val):
+                            result = 0
+
+                    #if the result is true no need to continue evaluating OR logic
+                    if result == 1:
+                        break
 
                 if result == 1 and self.currentState != goto:
                     self.currentState = goto
@@ -480,15 +534,16 @@ class stateMachineControl(object):
             if self.inputLogicState[inputLogicName] != rangeTest:
                 self.inputLogicState[inputLogicName] = rangeTest
                 return True
-            else:
+            elif self.inputLogicState[inputLogicName] == rangeTest:
                 return False
-
-        if self.inputLogicType[inputLogicName] == "boolean":
-            return
-        if self.inputLogicType[inputLogicName] == "boolean_XOR":
-            self.inputLogicState[inputLogicName] ^= 1
+        elif self.inputLogicType[inputLogicName] == "boolean":
             print inputLogicName
-            print self.inputLogicState[inputLogicName]
+            self.inputLogicState[inputLogicName] = self.rawData.getCurrentReadingFor(inputLogicName)
+            return True
+        elif self.inputLogicType[inputLogicName] == "boolean_XOR":
+            self.inputLogicState[inputLogicName] ^= 1
+            #print inputLogicName
+            #print self.inputLogicState[inputLogicName]
             return True
 
 
@@ -555,20 +610,36 @@ if __name__ == "__main__":
     outSock = sensorData.socket(zmq.PUB)
     outSock.bind("tcp://192.168.10.1:6000")
 
+    connections = {
+            "PI_1" : {
+                "ip" : "192.168.10.2",
+                "curent_state" : None
+            }
+    }
+
     master = stateMachineControl(1, "nextStateInfo.json", "stateInputLogic.json", sensorDataSocket, outSock)
 
-    chipAddr = [0x69,0x6a,0x6b,0x6c]
-    channelSelect = [0x80, 0xa0, 0xc0, 0xe0]
 
     master.initialRawDataBase()
     master.startThreads()
     master.varCheck()
-    exitFlag = 0
+    menuOpt = 0
     while True:
         try:
-            exitFlag = input()
-            if exitFlag == 1:
-                master.stopThreads()
-                sys.exit()
+            print "Enter a state number (-1 to exit):"
+            menuOpt = raw_input()
+            try:
+                num = int(menuOpt)
+            except ValueError:
+                pass
+            else:
+                if num == -1:
+                    master.stopThreads()
+                    sys.exit()
+                else:
+                    if num >= 0:
+                        master.updateState(num)
+                    else:
+                        print "invalid state number"
         except (SyntaxError, NameError):
             pass
