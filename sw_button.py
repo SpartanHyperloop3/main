@@ -21,8 +21,10 @@ class ControlButtonGUI:
     def __init__(self, master):
         self.master = master
         master.title("Off-pod Control System")
+        master.geometry("300x275")  
+        master.resizable(1, 1)  
 
-        self.label = Label(master, text="This is a Control button GUI!")
+        self.label = Label(master, text="Off-pod Control System")
         self.label.pack()
 
         self.stateone_button = Button(master, text="1) Initialise and test sensors", command=self.test_sensors, bg="yellow")
