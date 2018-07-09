@@ -2,11 +2,25 @@ import sys
 import time
 import binascii
 
-data = '\x42\x86\xc0\xde'
+data = '\xaa\x14\xa2\x05\x86\x42\xf9\xfa'
+#data = '\xaa\x14\x42\x86\x05\xa2'
+
+def sliceData(dataIn, start, end):
+    hex = binascii.hexlify(dataIn)
+    cut = hex[start:end]
+    end = len(cut)
+    
+    cut1 = cut[0:2]
+    cut2 = cut[2:4]
+    cut3 = cut[4:6]
+    cut4 = cut[6:8]
+    
+    result = cut4 + cut3 + cut2 + cut1
+    return result
+
 
 def float32(dataIn):
-    hex = binascii.hexlify(data)
-    num = int(hex, 16)
+    num = int(dataIn, 16)
     sign = (num & 0x80000000) >> 31
     exp = computeExponent(num)
     fraction = computeFraction(num)
@@ -38,4 +52,8 @@ def computeFraction(dataIn):
 
 
 
-print float32(data)
+#print float32(data)
+
+final = sliceData(data, 4, 12)
+
+print float32(final)
