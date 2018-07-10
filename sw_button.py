@@ -5,7 +5,7 @@ check if while loop is needed for continuous sending of json
 
 
 
-from tkinter import Tk, Label, Button
+from tkinter import Tk, Label, Button             #change line 8 to "from Tkinter import Tk, Label, Button" for python27
 import sys
 import zmq
 import time
@@ -13,7 +13,7 @@ import datetime
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
-socket.bind('tcp://127.0.0.1:5000')             #enter master ip, at port 5000
+socket.bind('tcp://127.0.0.1:5000')               #enter master ip, at port 5000
 
 Value = 1
 
@@ -27,10 +27,10 @@ class ControlButtonGUI:
         self.label = Label(master, text="Off-pod Control System")
         self.label.pack()
 
-        self.stateone_button = Button(master, text="1) Initialise and test sensors", command=self.test_sensors, bg="yellow")
+        self.stateone_button = Button(master, text="1) Initialize and test sensors", command=self.test_sensors, bg="yellow")
         self.stateone_button.pack()
 
-        self.statefourteen_button = Button(master, text="14) Initialise and test actuators", command=self.test_actuators, bg="blue")
+        self.statefourteen_button = Button(master, text="14) Initialize and test actuators", command=self.test_actuators, bg="blue")
         self.statefourteen_button.pack()
 
         self.statetwo_button = Button(master, text="2) Enter track", command=self.enter_track, bg="green")
@@ -61,7 +61,7 @@ class ControlButtonGUI:
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
-        socket.send_json(["Initialize and Test Sensors", Value, time])               
+        socket.send_json(["Initialize_and_Test_Sensors", Value, time])               
 
 
     def test_actuators(self):
@@ -69,21 +69,21 @@ class ControlButtonGUI:
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
-        socket.send_json(["Initialize and Test Actuators", Value, time])                        
+        socket.send_json(["Initialize_and_Test_Actuators", Value, time])                        
 
     def enter_track(self):
         print("Sending state 2")
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
-        socket.send_json(["Enter Track", Value, time])
+        socket.send_json(["Enter_Track", Value, time])
 
     def exit_track(self):
         print("Sending state 10")
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
-        socket.send_json(["Exit Track", Value, time])
+        socket.send_json(["Exit_Track", Value, time])
 
     def shutdown(self):
         print("Sendinng state 11")
@@ -104,14 +104,14 @@ class ControlButtonGUI:
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
-        socket.send_json(["Manual Operation Mode", Value, time])
+        socket.send_json(["Enter_Manual_State", Value, time])
 
     def emergency(self):
         print("Sending state 13")
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
-        socket.send_json(["Emergency Shutdown", Value, time])
+        socket.send_json(["Emergency_Override", Value, time])
 
 root = Tk()
 my_gui = ControlButtonGUI(root)
