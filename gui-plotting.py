@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
+from drawnow import *
+import json
 
 # ----- Start of test data and functions -----
+import time
 
 #dummy sensor data
 sensor_data_raw = {
@@ -66,20 +69,26 @@ total_trend_length = 60
 index_line = 0
 total_line_length = 33
 
-plot_layout = {
+plot_details = {
     221 : {'type' : 'trend',
-           'sensors' : ['position', 'velocity']},
+           'sensors' : ['position', 'velocity'],
+           'title' : 'Position & Velocity'},
     224 : {'type' : 'trend',
-           'sensors' : ['proximity 1', 'proximity 2']},
+           'sensors' : ['proximity 1', 'proximity 2'],
+           'title' : 'Proximity'},
     222 : {'type' : 'trend',
-           'sensors' : ['temperature 1', 'temperature 2']},
+           'sensors' : ['temperature 1', 'temperature 2'],
+           'title' : 'Temperature'},
     223 : {'type' : 'line',
-           'sensors' : ['voltage 1', 'voltage 2', 'voltage 3']}
+           'sensors' : ['voltage 1', 'voltage 2', 'voltage 3'],
+           'title' : 'Voltage'}
 }
+
+sensor_details = []
 
 def index_update():
     global index_trend, index_line
-    for key, value in plot_layout.items():
+    for key, value in plot_details.items():
 
         if value['type'] == 'trend':
             for n in value['sensors']:
@@ -103,8 +112,60 @@ def index_update():
 class BasicPlot():
 
     def __init__(self, plot_details, sensor_details, sensor_data):
-        plotDetails = plot_details
-        sensorDetails = sensor_details
-        sensorData = sensor_data
+        self.plotDetails = plot_details
+        self.sensorDetails = sensor_details
+        self.sensorData = sensor_data
 
-    def drawBasics(self):
+    def drawBasics(self, key, value):
+        '''These are the key and values for the plot_details dictionary'''
+        plt.subplot(key)
+        plt.title(value['title'])
+
+class TrendPlot(BasicPlot):
+
+    def __init__(self, plot_details, sensor_details, sensor_data):
+        temp_plot_details = {}
+        for key, value in plot_details.items():
+            if value['type'] == 'trend':
+                temp_plot_details[key] = value
+        BasicPlot.__init__(self, temp_plot_details, sensor_details, sensor_data)
+
+    def drawTrend(self):
+        for key, value in self.plotDetails.items():
+            self.drawBasics(key, value)
+            for sensor in value['sensors']:
+                plt.plot(self.sensorData[sensor][1], self.sensorData[sensor][0])
+
+class LinePlot(BasicPlot):
+
+    def __init__(self, plot_details, sensor_details, sensor_data):
+        temp_plot_details = {}
+        for key, value in plot_details.items():
+            if value['type'] == 'line':
+                temp_plot_details[key] = value
+        BasicPlot.__init__(self, temp_plot_details, sensor_details, sensor_data)
+
+    def drawLine(self):
+        for key, value in self.plotDetails.items():
+            self.drawBasics(key, value)
+            for i, sensor in list(enumerate(value['sensors'])):
+                plt.plot([self.sensorData[sensor], self.sensorData[sensor]], [i+0.2, i+0.8])
+
+
+trend_plot = TrendPlot(plot_details, sensor_details, sensor_data)
+line_plot = LinePlot(plot_details, sensor_details, sensor_data)
+
+def all_plots():
+    trend_plot.drawTrend()
+    line_plot.drawLine()
+
+while(True):
+    index_start = time.time()
+    index_update()
+    index_end = time.time()
+    print('index_trend: %.5f' % (index_end - index_start))
+    plot_start = time.time()
+    drawnow(all_plots)
+    plot_end = time.time()
+    print('plot: %.5f' % (plot_end - plot_start))
+    #time.sleep(1)
