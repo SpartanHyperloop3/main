@@ -5,61 +5,6 @@ import json
 # ----- Start of test data and functions -----
 import time
 
-#dummy sensor data
-sensor_data_raw = {
-    'position' : [[2.3, 2.4, 2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.3, 3.4, 3.5, 3.7, 3.8, 3.9, 3.3, 3.4, 3.5, 3.7, 3.8, 3.9,
-                   2.3, 2.4, 2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.3, 3.4, 3.5, 3.7, 3.8, 3.9, 3.3, 3.4, 3.5, 3.7, 3.8, 3.9,
-                   2.3, 2.4, 2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.3, 3.4, 3.5, 3.7, 3.8, 3.9, 3.3, 3.4, 3.5, 3.7, 3.8, 3.9],
-                  [4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.0, 5.1, 5.2, 5.3,
-                   5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1, 7.2, 7.3,
-                   7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 9.0, 9.1, 9.2, 9.3,
-                   9.4, 9.5, 9.6, 9.7, 9.8, 9.9]],
-    'velocity' : [[3.7, 3.7, 3.8, 3.8, 3.7, 3.7, 3.7, 3.7, 3.8, 3.8, 3.7, 3.8, 3.7, 3.9, 3.8, 3.8, 3.7, 3.8, 3.7, 3.9,
-                   3.7, 3.7, 3.8, 3.8, 3.7, 3.7, 3.7, 3.7, 3.8, 3.8, 3.7, 3.8, 3.7, 3.9, 3.8, 3.8, 3.7, 3.8, 3.7, 3.9,
-                   3.7, 3.7, 3.8, 3.8, 3.7, 3.7, 3.7, 3.7, 3.8, 3.8, 3.7, 3.8, 3.7, 3.9, 3.8, 3.8, 3.7, 3.8, 3.7, 3.9],
-                  [4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.0, 5.1, 5.2, 5.3,
-                   5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1, 7.2, 7.3,
-                   7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 9.0, 9.1, 9.2, 9.3,
-                   9.4, 9.5, 9.6, 9.7, 9.8, 9.9]],
-    'proximity 1' : [[7, 8, 7, 7, 8, 7, 8, 8, 8, 8, 9, 8, 7, 8, 8, 8, 9, 8, 7, 8,
-                      7, 8, 7, 7, 8, 7, 8, 8, 8, 8, 9, 8, 7, 8, 8, 8, 9, 8, 7, 8,
-                      7, 8, 7, 7, 8, 7, 8, 8, 8, 8, 9, 8, 7, 8, 8, 8, 9, 8, 7, 8],
-                     [4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.0, 5.1, 5.2,
-                      5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1,
-                      7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 9.0,
-                      9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9]],
-    'proximity 2' : [[8, 8, 8, 7, 7, 9, 6, 7, 7, 8, 8, 7, 9, 8, 7, 8, 8, 7, 9, 8,
-                      8, 8, 8, 7, 7, 9, 6, 7, 7, 8, 8, 7, 9, 8, 7, 8, 8, 7, 9, 8,
-                      8, 8, 8, 7, 7, 9, 6, 7, 7, 8, 8, 7, 9, 8, 7, 8, 8, 7, 9, 8],
-                     [4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.0, 5.1, 5.2,
-                      5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1,
-                      7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 9.0,
-                      9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9]],
-    'temperature 1' : [[40, 40, 40, 40, 40, 40, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42,
-                        40, 40, 40, 40, 40, 40, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42,
-                        40, 40, 40, 40, 40, 40, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42],
-                       [4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.0, 5.1, 5.2,
-                        5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1,
-                        7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 9.0,
-                        9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9]],
-    'temperature 2': [[43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44,
-                       43, 43, 47, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44,
-                       43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44],
-                      [4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.0, 5.1, 5.2,
-                       5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1,
-                       7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 9.0,
-                       9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9]],
-    'voltage 1' : [12.0, 12.3, 12.2, 12.1, 12.0, 11.9, 11.9, 12.0, 12.1, 12.1, 12.2,
-                   12.0, 12.3, 12.2, 12.1, 12.0, 11.9, 11.9, 12.0, 12.1, 12.1, 12.2,
-                   12.0, 12.3, 12.2, 12.1, 12.0, 11.9, 11.9, 12.0, 12.1, 12.1, 12.2],
-    'voltage 2' : [11.9, 11.7, 11.8, 12.1, 11.9, 11.9, 11.9, 11.9, 12.1, 12.1, 11.8,
-                   11.9, 11.7, 11.8, 12.1, 11.9, 11.9, 11.9, 11.9, 12.1, 12.1, 11.8,
-                   11.9, 11.7, 11.8, 12.1, 11.9, 11.9, 11.9, 11.9, 12.1, 12.1, 11.8],
-    'voltage 3': [12.0, 12.3, 12.2, 12.1, 12.0, 11.9, 11.9, 12.0, 12.1, 12.1, 12.2,
-                  12.0, 12.3, 12.2, 12.1, 12.0, 11.9, 11.9, 12.0, 12.1, 12.1, 12.2,
-                  12.0, 12.3, 12.2, 12.1, 12.0, 11.9, 11.9, 12.0, 12.1, 12.1, 12.2],
-}
-
 sensor_data = {}
 index_trend = 0
 index_trend_leap = 7
@@ -68,21 +13,6 @@ total_trend_length = 60
 
 index_line = 0
 total_line_length = 33
-
-plot_details = {
-    221 : {'type' : 'trend',
-           'sensors' : ['position', 'velocity'],
-           'title' : 'Position & Velocity'},
-    224 : {'type' : 'trend',
-           'sensors' : ['proximity 1', 'proximity 2'],
-           'title' : 'Proximity'},
-    222 : {'type' : 'trend',
-           'sensors' : ['temperature 1', 'temperature 2'],
-           'title' : 'Temperature'},
-    223 : {'type' : 'line',
-           'sensors' : ['voltage 1', 'voltage 2', 'voltage 3'],
-           'title' : 'Voltage'}
-}
 
 sensor_details = []
 
@@ -111,9 +41,8 @@ def index_update():
 
 class BasicPlot():
 
-    def __init__(self, plot_details, sensor_details, sensor_data):
+    def __init__(self, plot_details, sensor_data):
         self.plotDetails = plot_details
-        self.sensorDetails = sensor_details
         self.sensorData = sensor_data
 
     def drawBasics(self, key, value):
@@ -123,12 +52,12 @@ class BasicPlot():
 
 class TrendPlot(BasicPlot):
 
-    def __init__(self, plot_details, sensor_details, sensor_data):
+    def __init__(self, plot_details, sensor_data):
         temp_plot_details = {}
         for key, value in plot_details.items():
             if value['type'] == 'trend':
                 temp_plot_details[key] = value
-        BasicPlot.__init__(self, temp_plot_details, sensor_details, sensor_data)
+        BasicPlot.__init__(self, temp_plot_details, sensor_data)
 
     def drawTrend(self):
         for key, value in self.plotDetails.items():
@@ -138,26 +67,54 @@ class TrendPlot(BasicPlot):
 
 class LinePlot(BasicPlot):
 
-    def __init__(self, plot_details, sensor_details, sensor_data):
+    def __init__(self, plot_details, sensor_data):
         temp_plot_details = {}
         for key, value in plot_details.items():
             if value['type'] == 'line':
                 temp_plot_details[key] = value
-        BasicPlot.__init__(self, temp_plot_details, sensor_details, sensor_data)
+        BasicPlot.__init__(self, temp_plot_details, sensor_data)
+
+        self.lineBottom = 0.2
+        self.lineTop = 0.8
+        self.lineReadingHeight = 0.85
 
     def drawLine(self):
         for key, value in self.plotDetails.items():
             self.drawBasics(key, value)
             for i, sensor in list(enumerate(value['sensors'])):
-                plt.plot([self.sensorData[sensor], self.sensorData[sensor]], [i+0.2, i+0.8])
-
-
-trend_plot = TrendPlot(plot_details, sensor_details, sensor_data)
-line_plot = LinePlot(plot_details, sensor_details, sensor_data)
+                plt.plot([self.sensorData[sensor], self.sensorData[sensor]], [i+self.lineBottom, i+self.lineTop])
+                plt.text(self.sensorData[sensor], i+self.lineReadingHeight, self.sensorData[sensor], horizontalalignment='center')
 
 def all_plots():
     trend_plot.drawTrend()
     line_plot.drawLine()
+
+def read_json(read_file):
+    with open(read_file, 'r') as file:
+        return json.loads(file.read())
+
+def process_sensor_ranges(file_input='stateInputLogic_test.json'):
+    sensor_details = read_json(file_input)
+    temp = {}
+
+    for key, value in sensor_details.items():
+        if value[1]['typeOfLogic'] == 'range':
+            for key in value[1]['raw_data_names']:
+                temp[key] = value[1]['raw_data_names'][key]['params']
+
+    for key1, value1 in plot_details.items():
+        for key2, value2 in temp.items():
+            if key2 in value1['sensors']:
+                value1['range'] = value2
+
+
+plot_details = read_json('plot_details.json')
+sensor_data_raw = read_json('sensor_data_raw_test.json')
+process_sensor_ranges()
+
+trend_plot = TrendPlot(plot_details, sensor_data)
+line_plot = LinePlot(plot_details, sensor_data)
+
 
 while(True):
     index_start = time.time()
