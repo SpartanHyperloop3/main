@@ -59,12 +59,19 @@ class stateMachineControl(object):
                 if self.poller.poll(1000):
                     message = self.sock.recv_json()
                     #self.control.sendDataToControlStation(self.sock)
-                    self.control.rawData.updateEntry(message[0], [message[1], message[2]])
-                    self.control.inputLogicQueue.put(message[0])
-                    if message[0] == "Emergency_Override":
-                        print message[0],message[1]
-                    #elif message[0] == "PI_1_U1_CH1":
-                    #    print message[0], message[1]
+                    try:
+                        self.control.rawData.updateEntry(message[0], [message[1], message[2]])
+                        if message[3] == "logic":
+                            self.control.inputLogicQueue.put(message[0])
+                        elif message[3] == "broadcast":
+                            pass
+                        #if message[0] == "state_13_start_time":
+                        #    print message[0],message[1],message[2]
+                        #    print self.control.rawData.getCurrentTimeFor(message[0])
+                        #elif message[0] == "PI_1_U1_CH1":
+                        #    print message[0], message[1]
+                    except:
+                        pass
 
 
         def stop(self):
@@ -103,15 +110,11 @@ class stateMachineControl(object):
                     inputStateNameList = self.control.inputLogicNameByDataName[dataName]
 
                     for inputStateName in inputStateNameList:
-                        #print self.control.rawData.getCurrentReadingFor("PI_1_U1_CH1")
                         if self.control.setStateInputLogic(inputStateName, dataName):
-                            #print self.control.rawData.getCurrentReadingFor(inputStateName)
-                            #print self.control.currentState
-                            #print "got here"
                             self.control.inputLogicHasBeenUpdated.set()
                     self.control.inputLogicQueue.task_done()
 
-                except Queue.Empty:
+                except:
                     pass
 
         def stop(self):
@@ -138,12 +141,14 @@ class stateMachineControl(object):
                     pass
                 else:
                     self.updateSlaveState(slaveState)
-                    self.checkAllSlaveStates() 
+                    self.checkAllSlaveStates()
 
 
         def updateSlaveState(self, SlaveState):
             pass
 
+        def checkAllSlaveStates(self):
+            pass
 
         def stop(self):
             self._killFlag.set()
@@ -264,8 +269,23 @@ class stateMachineControl(object):
 
         self.updateSlaveStateQueue = Queue.Queue()
 
-        self.connections = {
-
+        connections = {
+                "PI_1" : {
+                    "ip" : "192.168.10.2",
+                    "curent_state" : None
+                },
+                "PI_2" : {
+                    "ip" : "192.168.10.3",
+                    "current_state" : None
+                },
+                "PI_3" : {
+                    "ip" : "192.168.10.4",
+                    "curent_state" : None
+                },
+                "PI_4" : {
+                    "ip" : "192.168.10.5",
+                    "current_state" : None
+                }
         }
         #initialize threads
         self.consumerThread = self.consumerThread(self)
@@ -283,7 +303,10 @@ class stateMachineControl(object):
             f = open(stateDataJSONfile, "r")
 
             stateJSON = json.loads(f.read())
-
+            
+            self.stateList = []
+            for state in stateJSON.keys():
+                self.stateList.append(state)
             #validTransitions holds the valid state changes per current state
             self.validTransitions = {}
             arr = []
@@ -325,13 +348,6 @@ class stateMachineControl(object):
             self.inputLogicState = {}
             for key,val in cont.items():
                 self.inputLogicState[key] = val[0]
-            #inputLogicType holds the type of logic, which is used by the 
-            #setStateInputLogic method to determine how to process the raw data
-            #and report a boolean value to be used for next state logic
-            self.inputLogicType = {}
-            for key,val in cont.items():
-                self.inputLogicType[key] = val[1]["typeOfLogic"]
-
 
             #rawDataUnits returns units of data for each sensor input.
             self.rawDataUnits = {}
@@ -340,7 +356,6 @@ class stateMachineControl(object):
                     self.rawDataUnits[sensor] = properties["raw_data_units"]
                 if not val[1]["raw_data_names"]:
                     self.rawDataUnits[key] = "none"
-            print self.rawDataUnits
             #inputLogicParams holds the parameters for the logic type. For example,
             #a list of 2 numbers is used for the upper and lower bounds of a range
             #logic type
@@ -374,8 +389,14 @@ class stateMachineControl(object):
                 if not val[1]["raw_data_names"]:
                     self.dataValuesPerInputState[key] = [key]
 
-            #print self.dataValuesPerInputState
+            self.sensorInfo = {}
+            for key,val in cont.items():
+                self.sensorInfo[key] = val[1]["raw_data_names"]
             f.close()
+            
+            #print self.dataValuesPerInputState
+            #print self.inputLogicNameByDataName
+
         except IOError:
             print "Could not open JSON file"
 
@@ -396,6 +417,10 @@ class stateMachineControl(object):
             for sensor in inputLogic:
                 self.rawData.createNewEntry(sensor)
 
+        for state in self.stateList:
+            self.rawData.createNewEntry("state_%s_start_time"%state)
+            self.rawData.createNewEntry("state_%s_curr_time"%state)
+        #print self.rawData.dataCollectionByType
 
     def startThreads(self):
         """Starts all threads, called in main"""
@@ -466,7 +491,7 @@ class stateMachineControl(object):
                     for key,val in possibilities.items():
                         if (self.inputLogicState[key] != val):
                             result = 0
-                    #if the result is true no need to continue evaluating OR logic
+                    #if the result is true, stop evaluating OR logic
                     if result == 1:
                         break
                 #if the all state transition is to take place and the current
@@ -527,24 +552,24 @@ class stateMachineControl(object):
         TODO:
             add support for logic other than range
         """
-        if self.inputLogicType[inputLogicName] == "range":
+        #print self.sensorInfo
+        #print inputLogicName
+        for sensor in self.dataValuesPerInputState[inputLogicName]:
+            #print sensor
+            #print self.sensorInfo[inputLogicName][sensor]["type_of_logic"]
+            if self.sensorInfo[inputLogicName][sensor]["type_of_logic"] == "range":
+                self.inputLogicState[inputLogicName] = self.outOfRange(sensor, self.sensorInfo[inputLogicName][sensor]["params"])
+            elif self.sensorInfo[inputLogicName][sensor]["type_of_logic"] == "boolean":
+                try:
+                    self.inputLogicState[inputLogicName] = self.rawData.getCurrentReadingFor(sensor)
+                except:
+                    print sys.exc_info()[0]
+                #print self.inputLogicState[inputLogicName],self.rawData.getCurrentReadingFor(sensor)
+            elif self.sensorInfo[inputLogicName][sensor]["type_of_logic"] == "time_diff":
+                self.inputLogicState[inputLogicName] = self.timeDifference(sensor, self.sensorInfo[inputLogicName][sensor]["params"])
 
-            rangeTest = self.checkIfStateShouldChange(inputLogicName)
+            return True
 
-            if self.inputLogicState[inputLogicName] != rangeTest:
-                self.inputLogicState[inputLogicName] = rangeTest
-                return True
-            elif self.inputLogicState[inputLogicName] == rangeTest:
-                return False
-        elif self.inputLogicType[inputLogicName] == "boolean":
-            print inputLogicName
-            self.inputLogicState[inputLogicName] = self.rawData.getCurrentReadingFor(inputLogicName)
-            return True
-        elif self.inputLogicType[inputLogicName] == "boolean_XOR":
-            self.inputLogicState[inputLogicName] ^= 1
-            #print inputLogicName
-            #print self.inputLogicState[inputLogicName]
-            return True
 
 
 
@@ -560,24 +585,34 @@ class stateMachineControl(object):
             #print result
         return result
 
+    def timeDifference(self, sensorName, params):
+        startTime = self.rawData.getCurrentTimeFor(params[0])
+        currTime = self.rawData.getCurrentTimeFor(sensorName)
+ 
+        try:
+            diff = currTime - startTime
+      
+        except:
+            return 0
+       
+        if currTime == None:
+            return 0
+        if diff > params[1]:
+            return 1
+        else:
+            return 0
 
 
 
     def outOfRange(self, sensorName, rangeParams):
         """Detects if reading is out of range"""
         data = self.rawData.getCurrentReadingFor(sensorName)
-        #print sensorName
-        #print
-        #if sensorName == "PI_1_U1_CH1":
-            #print rangeParams
-            #print data
         if data == None:
             return 0
         if data > rangeParams[1] or data < rangeParams[0]:
             return 1
         else:
             return 0
-
 
 
 
@@ -610,12 +645,7 @@ if __name__ == "__main__":
     outSock = sensorData.socket(zmq.PUB)
     outSock.bind("tcp://192.168.10.1:6000")
 
-    connections = {
-            "PI_1" : {
-                "ip" : "192.168.10.2",
-                "curent_state" : None
-            }
-    }
+
 
     master = stateMachineControl(1, "nextStateInfo.json", "stateInputLogic.json", sensorDataSocket, outSock)
 

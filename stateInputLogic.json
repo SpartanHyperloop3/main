@@ -4,12 +4,52 @@
         {
             "raw_data_names": {
                 "Emergency_Override": {
-                    "digital": 1,
+                    
                     "params": null,
-                    "raw_data_units": "bool"
+                    "raw_data_units": "bool",
+					"type_of_logic": "boolean"
+                },
+                "PI_1_U1_CH1": {
+                    
+                    "params": [
+                        0.0,
+                        1.0
+                    ],
+					"type_of_logic": "range",
+                    "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "boolean_XOR"
+ 
+            }
+        }
+    ],
+    "Emergency_Timeout": [
+        0,
+        {
+            "raw_data_names": {
+                "state_13_curr_time": {
+                    "params": [
+                        "state_13_start_time",
+                        10
+                    ],
+					"type_of_logic": "time_diff",
+                    "raw_data_units": "s"
+                }
+            }
+        }
+    ],
+    "hover_engine_timeout_state_1": [
+        0,
+        {
+            "raw_data_names": {
+                "state_1_curr_time": {
+                    "params": [
+                        "state_1_start_time",
+                        10
+                    ],
+					"type_of_logic": "time_diff",
+                    "raw_data_units": "s"
+                }
+            }
         }
     ],
     "test1": [
@@ -17,15 +57,15 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH1": {
-                    "digital": 0,
+                    
                     "params": [
                         0.0,
                         1.0
                     ],
+					"type_of_logic": "range",
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "test2": [
@@ -33,15 +73,15 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH2": {
-                    "digital": 0,
+                    
                     "params": [
                         0.0,
                         1.0
                     ],
+					"type_of_logic": "range",
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_A_current": [
@@ -49,15 +89,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0.0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_A_temp": [
@@ -65,15 +104,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_A_voltage": [
@@ -81,15 +119,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH3": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_B_current": [
@@ -97,15 +134,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0.0,
                         1.9
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_B_temp": [
@@ -113,15 +149,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_B_voltage": [
@@ -129,15 +164,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_C_current": [
@@ -145,15 +179,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH3": {
-                    "digital": 0,
+                    
                     "params": [
                         0.0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_C_temp": [
@@ -161,15 +194,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_C_voltage": [
@@ -177,15 +209,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_D_current": [
@@ -193,15 +224,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_D_temp": [
@@ -209,15 +239,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "battery_D_voltage": [
@@ -225,15 +254,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_A_rpm": [
@@ -241,15 +269,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_A_current": [
@@ -257,15 +284,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_A_rpm": [
@@ -273,15 +299,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_A_voltage": [
@@ -289,15 +314,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_B_current": [
@@ -305,15 +329,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_B_rpm": [
@@ -321,15 +344,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_B_voltage": [
@@ -337,15 +359,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_C_current": [
@@ -353,15 +374,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_C_rpm": [
@@ -369,15 +389,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_C_voltage": [
@@ -385,15 +404,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_D_current": [
@@ -401,15 +419,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_D_rpm": [
@@ -417,15 +434,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hub_D_voltage": [
@@ -433,15 +449,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_B_rpm": [
@@ -449,15 +464,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_C_rpm": [
@@ -465,15 +479,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_D_rpm": [
@@ -481,15 +494,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_A_current": [
@@ -497,15 +509,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_B_current": [
@@ -513,15 +524,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_C_current": [
@@ -529,15 +539,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_D_current": [
@@ -545,15 +554,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_A_voltage": [
@@ -561,15 +569,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_B_voltage": [
@@ -577,15 +584,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_C_voltage": [
@@ -593,15 +599,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_B_voltage": [
@@ -609,15 +614,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_C_voltage": [
@@ -625,15 +629,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_D_voltage": [
@@ -641,15 +644,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_controller_A_temp": [
@@ -657,15 +659,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_controller_B_temp": [
@@ -673,15 +674,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_controller_C_temp": [
@@ -689,15 +689,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "hover_controller_D_temp": [
@@ -705,15 +704,14 @@
         {
             "raw_data_names": {
                 "PI_1_U1_CH4": {
-                    "digital": 0,
+                    
                     "params": [
                         0,
                         1.0
                     ],
                     "raw_data_units": "volts"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
     "manual_enter_emergency_state": [
@@ -721,12 +719,11 @@
         {
             "raw_data_names": {
                 "manual_enter_emergency_state": {
-                    "digital": 1,
+                    
                     "params": null,
                     "raw_data_units": "bool"
                 }
-            },
-            "typeOfLogic": "boolean_XOR"
+            }
         }
     ],
     "accel_test": [
@@ -734,7 +731,7 @@
         {
             "raw_data_names": {
                 "PI_1_Accelerometer_X": {
-                    "digital": 1,
+                    
                     "params": [
 						0,
 						1.0
@@ -742,7 +739,7 @@
                     "raw_data_units": "g"
                 },
                 "PI_1_Accelerometer_Y": {
-                    "digital": 1,
+                    
                     "params": [
 						0,
 						1.0
@@ -750,15 +747,14 @@
                     "raw_data_units": "g"
                 },
                 "PI_1_Accelerometer_Z": {
-                    "digital": 1,
+                    
                     "params": [
 						0,
 						1.0
 					],
                     "raw_data_units": "g"
                 }
-            },
-            "typeOfLogic": "range"
+            }
         }
     ],
 	"Enter_Manual_State" : [
@@ -766,7 +762,7 @@
 		{
 			"raw_data_names": {
 				"Enter_Manual_State" : {
-					"digital": 1,
+					
 					"params": null,
 					"raw_data_units": "bool"
 				}

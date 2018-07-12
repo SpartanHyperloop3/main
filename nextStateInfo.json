@@ -5,12 +5,13 @@
 			[ 
 				{
 					"test1" : 1,
-					"Emergency_Override" : 1,
-					"battery_A_current" : 1
+					"test2" : 1
 				},
 				{
-					"test2" : 1,
-					"battery_A_current" : 1
+					"test2" : 1
+				},
+				{
+					"hover_engine_timeout_state_1" : 1
 				},
 				{
 					"battery_A_current" : 1
@@ -193,6 +194,18 @@
 	],
 	"13" : [
 		[ 1,
+			[
+				{
+					"Emergency_Override" : 1
+				},
+				{
+					"Emergency_Timeout" : 1
+				}
+			]   
+		]
+	],
+	"1" : [
+		[ 7,
 			[
 				{
 					"Emergency_Override" : 1
