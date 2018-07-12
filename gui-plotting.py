@@ -62,8 +62,28 @@ class TrendPlot(BasicPlot):
     def drawTrend(self):
         for key, value in self.plotDetails.items():
             self.drawBasics(key, value)
+            if value.has_key('range'):
+                # may want to change to allow multiple ranges per subplot that way multiple types of graphs can be included
+                nominal_range = value['range']
+                emergency_range = []
+                emergency_range.append(nominal_range[0] - (nominal_range[1] - nominal_range[0]) / 2)
+                emergency_range.append(nominal_range[1] + (nominal_range[1] - nominal_range[0]) / 2)
+            x_min_temp = []
+            x_max_temp = []
             for sensor in value['sensors']:
                 plt.plot(self.sensorData[sensor][1], self.sensorData[sensor][0])
+                x_min_temp.append(min(self.sensorData[sensor][1]))
+                x_max_temp.append(max(self.sensorData[sensor][1]))
+            x_min = min(x_min_temp)
+            x_max = max(x_max_temp)
+            if value.has_key('range'):
+                plt.fill_between([x_min, x_max], [emergency_range[0], emergency_range[0]],
+                                 [nominal_range[0], nominal_range[0]], alpha=0.3, color='red')
+                plt.fill_between([x_min, x_max], [emergency_range[1], emergency_range[1]],
+                                 [nominal_range[1], nominal_range[1]], alpha=0.3, color='red')
+                plt.fill_between([x_min, x_max], [nominal_range[0], nominal_range[0]],
+                                 [nominal_range[1], nominal_range[1]], alpha=0.3, color='green')
+
 
 class LinePlot(BasicPlot):
 
@@ -74,16 +94,29 @@ class LinePlot(BasicPlot):
                 temp_plot_details[key] = value
         BasicPlot.__init__(self, temp_plot_details, sensor_data)
 
-        self.lineBottom = 0.2
-        self.lineTop = 0.8
-        self.lineReadingHeight = 0.85
+        self.lineBottom = 0.05
+        self.lineTop = 0.65
+        self.textReadingHeight = 0.7
+        self.textLimitHeight = 0.35
 
     def drawLine(self):
         for key, value in self.plotDetails.items():
             self.drawBasics(key, value)
+            if value.has_key('range'):
+                # may want to change to allow multiple ranges per subplot that way multiple types of graphs can be included
+                nominal_range = value['range']
+                emergency_range = []
+                emergency_range.append(nominal_range[0] - (nominal_range[1] - nominal_range[0]) / 2)
+                emergency_range.append(nominal_range[1] + (nominal_range[1] - nominal_range[0]) / 2)
             for i, sensor in list(enumerate(value['sensors'])):
-                plt.plot([self.sensorData[sensor], self.sensorData[sensor]], [i+self.lineBottom, i+self.lineTop])
-                plt.text(self.sensorData[sensor], i+self.lineReadingHeight, self.sensorData[sensor], horizontalalignment='center')
+                plt.plot([self.sensorData[sensor], self.sensorData[sensor]], [i+self.lineBottom, i+self.lineTop], color='black')
+                plt.text(self.sensorData[sensor], i + self.textReadingHeight, self.sensorData[sensor], horizontalalignment='center')
+                if value.has_key('range'):
+                    plt.text(nominal_range[0], i+self.textLimitHeight, nominal_range[0], horizontalalignment='right')
+                    plt.text(nominal_range[1], i + self.textLimitHeight, nominal_range[1], horizontalalignment='left')
+                    plt.fill_between([emergency_range[0], nominal_range[0]], [i, i], [i+1, i+1], alpha=0.3, color='red')
+                    plt.fill_between([nominal_range[1], emergency_range[1]], [i, i], [i + 1, i + 1], alpha=0.3, color='red')
+                    plt.fill_between([nominal_range[0], nominal_range[1]], [i, i], [i+1, i+1], alpha=0.3, color='green')
 
 def all_plots():
     trend_plot.drawTrend()
