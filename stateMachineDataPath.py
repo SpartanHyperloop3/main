@@ -11,6 +11,8 @@ import smbus
 import Queue
 import dataController
 import pdb
+import pigpio
+import struct
 
 class stateMachineDataPath(object):
     """Sets the outputs based on state and reports feedback.
@@ -50,6 +52,7 @@ class stateMachineDataPath(object):
                 if self.poller.poll(1000):
                     message = self.sock.recv_json()
                     self.queue.put(message)
+                    print message
 
 
 
@@ -61,7 +64,7 @@ class stateMachineDataPath(object):
 
     class outgoingDataThread(threading.Thread):
 
-        def __init__(self, control, zmqSock, outgoingDataQueue):
+        def __init__(self, control, zmqSock, outgoingDataQueue, stateCheckQueue):
             threading.Thread.__init__(self)
             self._killFlag = threading.Event()
             self.control = control
@@ -70,6 +73,7 @@ class stateMachineDataPath(object):
             self.poller = zmq.Poller()
             self.poller.register(self.sock, zmq.POLLOUT)
             self.queue = outgoingDataQueue
+            self.stateCheckQueue = stateCheckQueue
 
         def run(self):
             while not self._killFlag.is_set():
@@ -80,6 +84,7 @@ class stateMachineDataPath(object):
                         pass
                     else:
                         self.sock.send_json(data)
+                        self.queue.task_done()
 
         def stop(self):
             self._killFlag.set()
@@ -94,11 +99,12 @@ class stateMachineDataPath(object):
         Waits for currentStateHasChanged event to be set then sets outputs
         according to the state.
         """
-        def __init__(self, control):
+        def __init__(self, control, incomingDataQueue):
             threading.Thread.__init__(self)
             self._killFlagOut = threading.Event()
             self.control = control
             self.name = "output_control"
+            self.queue = incomingDataQueue
 
 
         def run(self):
@@ -108,16 +114,18 @@ class stateMachineDataPath(object):
                 except Queue.Empty:
                     pass
                 else:
-                    if message[0] == "state":
-                        self.control.currentState = message[1]
+                    if data[0] == "state":
+                        self.control.currentState = data[1]
+                        self.control.sendQueue.put(["state_%s_start_time"%self.control.currentState, self.control.currentState, time.time(), "meta"])
+                        #if self.control.okForOutputChange.is_set():
                         self.control.setOutputsByState()
-                    elif message[0] == "cmd":
+                    elif data[0] == "cmd":
                         pass
+                    self.queue.task_done()
 
 
         def stop(self):
             self._killFlagOut.set()
-
 
 
 
@@ -145,26 +153,14 @@ class stateMachineDataPath(object):
                 except Queue.Empty:
                     pass
                 else:
-                    if nextJob["operations"] == "ini":
-                        self.writeByteData(nextJob["address"], nextJob["cmd"], nextJob["data"])
-
-                    elif nextJob["operations"] == "RW":
-                        self.writeOps(nextJob)
-                        self.reading = self.readOps(nextJob)
-                        timeOfReading = time.time()
-                        packet = [nextJob["sensor_name"], self.reading, timeOfReading]
-                        self.control.rawData.updateEntry(nextJob["sensor_name"], [self.reading, timeOfReading])
-                        self.control.sendQueue.put(packet)
-
-                    elif nextJob["operations"] == "R":
-                        self.reading = self.readOps(nextJob)
-                        timeOfReading = time.time()
-                        packet = [nextJob["sensor_name"], self.reading, timeOfReading]
-                        self.control.rawData.updateEntry(nextJob["sensor_name"], [self.reading, timeOfReading])
-                        self.control.sendQueue.put(packet)
-
-                    elif nextJob["operations"] == "W":
-                        self.writeOps(nextJob)
+                    #if nextJob["bus"] == "serial":
+                    #    print nextJob
+                    switch = {
+                            "i2c" : self.I2Cops,
+                            "serial" : self.SERops
+                    }
+                    switch.get(nextJob["bus"], "invalid function")(nextJob)
+                    self.queue.task_done()
 
 
 
@@ -176,6 +172,10 @@ class stateMachineDataPath(object):
         ########################################################
         def readByteData(self, nextJob):
             bus = smbus.SMBus(1)
+            if nextJob["pec"] == 1:
+                bus.pec = True
+            else:
+                bus.pec = False
             result = bus.read_byte_data(nextJob["address"], nextJob["read"][0])
             return result
 
@@ -187,6 +187,11 @@ class stateMachineDataPath(object):
 
         def readWord(self, nextJob):
             bus = smbus.SMBus(1)
+            if nextJob["pec"] == 1:
+                bus.pec = True
+            else:
+                bus.pec = False
+
             result = bus.read_word_data(nextJob["address"], nextJob["read"][0])
             return result
 
@@ -199,6 +204,10 @@ class stateMachineDataPath(object):
         def readBlock(self, nextJob):
             #print nextJob["address"], nextJob["read"]
             bus = smbus.SMBus(1)
+            if nextJob["pec"] == 1:
+                bus.pec = True
+            else:
+                bus.pec = False
             result = bus.read_i2c_block_data(nextJob["address"], nextJob["read"][0])
             time.sleep(0.001)
             result = bus.read_i2c_block_data(nextJob["address"], nextJob["read"][0])
@@ -217,14 +226,51 @@ class stateMachineDataPath(object):
         ########################################################
         def writeByte(self, addr, data):
             bus = smbus.SMBus(1)
+            if nextJob["pec"] == 1:
+                bus.pec = True
+            else:
+                bus.pec = False
             bus.write_byte(addr, data)
 
         def writeByteData(self, addr, cmd, data):
             bus = smbus.SMBus(1)
+            if nextJob["pec"] == 1:
+                bus.pec = True
+            else:
+                bus.pec = False
             bus.write_byte_data(addr, cmd, data)
 
+        def writeWordData(self, nextJob):
+            bus = smbus.SMBus(1)
+            if nextJob["pec"] == 1:
+                bus.pec = True
+            else:
+                bus.pec = False
+            bus.write_word_data(nextJob["address"], nextJob["cmd"], nextJob["data"])
+        ###########################################################
+        # Serial write functions
+        ###########################################################
+        def writeSER(self, dev, addr, data, crc):
+            dev.write(data)
+            time.sleep(0.01)
 
 
+        ###########################################################
+        # Serial read functions
+        ###########################################################
+        def readSER(self, dev, addr, dataLen, crc):
+            reading = ""
+            reading = dev.read(4)
+            time.sleep(0.01)
+            try:
+                s = struct.unpack('>I', reading)
+            except:
+                pass
+            reading = getattr(self, callback)(reading, *callbackArgs)
+            try:
+                return s[0]
+            except:
+                return s
         ############################################################
         # R/W automation functions
         ############################################################
@@ -232,6 +278,7 @@ class stateMachineDataPath(object):
             for writeData in nextJob["write"]:
                 if len(writeData) == 2:
                     self.writeByteData(nextJob["address"], writeData[0], writeData[1])
+                    time.sleep(0.1)
                 elif len(writeData) == 1:
                     self.writeByte(nextJob["address"], writeData[0])
 
@@ -264,8 +311,50 @@ class stateMachineDataPath(object):
                     reading = self.readBlock(nextJob)
                     reading = getattr(self, nextJob["callback"]["function"])(reading,*nextJob["callback"]["args"])
 
+            #print nextJob["sensor_name"],reading
             return reading
 
+
+
+        def SERops(self, nextJob):
+            if nextJob["write"]:
+                self.writeSER(nextJob["dev"], nextJob["reg"], nextJob["write"], nextJob["crc_write"])
+            if nextJob["readLen"] > 0:
+                self.reading = self.readSER(nextJob["dev"], nextJob["reg"], nextJob["readLen"], nextJob["crc_read"])
+                timeOfReading = time.time()
+                packet = [nextJob["sensor_name"], self.reading, timeOfReading, "logic"]
+                self.control.rawData.updateEntry(nextJob["sensor_name"], [self.reading, timeOfReading])
+                self.control.sendQueue.put(packet)
+
+
+        def I2Cops(self, nextJob):
+            if nextJob["operations"] == "ini":
+                if nextJob["data_type"] == "byte":
+                    self.writeByteData(nextJob["address"], nextJob["cmd"], nextJob["data"])
+                elif nextJob["data_type"] == "word":
+                    self.writeWordData(nextJob)
+
+            elif nextJob["operations"] == "RW":
+                self.writeOps(nextJob)
+                self.reading = self.readOps(nextJob)
+                timeOfReading = time.time()
+                #packet = [nextJob["sensor_name"], self.reading, timeOfReading]
+                #self.control.rawData.updateEntry(nextJob["sensor_name"], [self.reading, timeOfReading])
+                #self.control.sendQueue.put(packet)
+
+            elif nextJob["operations"] == "R":
+                self.reading = self.readOps(nextJob)
+                timeOfReading = time.time()
+                #packet = [nextJob["sensor_name"], self.reading, timeOfReading]
+                #self.control.rawData.updateEntry(nextJob["sensor_name"], [self.reading, timeOfReading])
+                #self.control.sendQueue.put(packet)
+
+            elif nextJob["operations"] == "W":
+                self.writeOps(nextJob)
+
+            packet = [nextJob["sensor_name"], self.reading, timeOfReading, "logic"]
+            self.control.rawData.updateEntry(nextJob["sensor_name"], [self.reading, timeOfReading])
+            self.control.sendQueue.put(packet)
 
         #################################################
         # data processing callback functions start here #
@@ -281,6 +370,13 @@ class stateMachineDataPath(object):
             result = reading/lsb
             return result
 
+        def convertIRtemp(self, reading):
+            result = (reading * 0.02) - 273.15
+            return result
+            #return hex(reading)
+
+        def raw(self, reading):
+            return reading
 
         def stop(self):
             self._killFlag.set()
@@ -297,6 +393,7 @@ class stateMachineDataPath(object):
             self._killFlag = threading.Event()
             self.queue = I2Cqueue
             self.samplingPeriod = configData["sample_rate"]
+            self.bus = configData["bus"]
             try:
                 self.initData = configData["init"]
             except KeyError:
@@ -309,10 +406,13 @@ class stateMachineDataPath(object):
                 for init in self.initData:
                     self.queue.put(
                             {
+                                "bus" : self.bus,
                                 "address" : init["location"],
-                                "cmd" : init["reg"],
+                                "cmd" : init["register"],
                                 "data" : init["data"],
-                                "operation" : "ini"
+                                "data_type" : init["data_type"],
+                                "operations" : "ini",
+                                "pec" : init["pec"]
                             })
             except:
                 pass
@@ -320,12 +420,73 @@ class stateMachineDataPath(object):
                 for sensor,attr in self.sensorList.items():
                     self.queue.put(
                             {
+                                "bus" : self.bus,
                                 "operations" : attr["operations"],
                                 "address" : attr["location"],
                                 "write" : attr["write"],
                                 "read" : attr["read"],
                                 "sensor_name" : sensor,
                                 "data_length" : attr["data_length"],
+                                "data_type" : attr["data_type"],
+                                "callback" : attr["data_processing_callback"],
+                                "pec" : attr["pec"]
+                            })
+                time.sleep(self.samplingPeriod)
+
+
+
+
+    class SERthread(threading.Thread):
+
+        def __init__(self, control, name, configData, sensorList, I2Cqueue):
+            threading.Thread.__init__(self)
+            self.name = name
+            self._killFlag = threading.Event()
+            self.queue = I2Cqueue
+            self.samplingPeriod = configData["sample_rate"]
+            self.ser = serial.Serial(configData["device"], configData["baud"], serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=0)
+            self.baud = configData["baud"]
+            self.bus = configData["bus"]
+
+            self.bytes = {}
+
+
+            try:
+                self.initData = configData["init"]
+            except KeyError:
+                pass
+
+            self.sensorList = sensorList
+            self.daemon = True
+
+            for sensor,attr in self.sensorList.items():
+                data = bytearray.fromhex(attr["write"])
+                self.bytes[sensor] = data
+
+        def run(self):
+            try:
+                for init in self.initData:
+                    self.queue.put(
+                            {
+                                "address" : init["location"],
+                                "cmd" : init["reg"],
+                                "data" : init["data"],
+                                "operations" : "ini"
+                            })
+            except:
+                pass
+            while not self._killFlag.is_set():
+                for sensor,attr in self.sensorList.items():
+                    self.queue.put(
+                            {
+                                "bus" : self.bus,
+                                "dev" : self.ser,
+                                "reg" : attr["register"],
+                                "write" : self.bytes[sensor],
+                                "readLen" : attr["read_len"],
+                                "sensor_name" : sensor,
+                                "crc_write" : attr["crc_write"],
+                                "crc_read" : attr["crc_read"],
                                 "data_type" : attr["data_type"],
                                 "callback" : attr["data_processing_callback"]
                             })
@@ -370,22 +531,26 @@ class stateMachineDataPath(object):
 
         GPIO.setmode(GPIO.BCM)
 
+        self.pi = pigpio.pi()
+
         self.currentState = setInitialState
         self.currentStateHasChanged = threading.Event()
         self.incomingSocket = incomingSocket
         self.outgoingSocket = outgoingSocket
         self.ADCthreads = []
         self.I2Cthreads = []
+        self.SERthreads = []
         self.I2Cqueue = Queue.Queue()
         self.I2CconsumerThread = self.I2Cconsumer(self, self.I2Cqueue)
         self.rawData = dataController.dataController()
         self.sendQueue = Queue.Queue()
-
-        self.outgoingDataThread = self.outgoingDataThread(self, self.outgoingSocket, self.sendQueue)
+        self.incomingDataQueue = Queue.Queue()
+        self.stateCheckQueue = Queue.Queue()
+        self.outgoingDataThread = self.outgoingDataThread(self, self.outgoingSocket, self.sendQueue, self.stateCheckQueue)
         self.manualMode = 0
 
-        self.incomingDataThread = self.incomingDataThread(self, self.incomingSocket)
-        self.outputsThread = self.outputsThread(self)
+        self.incomingDataThread = self.incomingDataThread(self, self.incomingSocket, self.incomingDataQueue)
+        self.outputsThread = self.outputsThread(self, self.incomingDataQueue)
         self.lock = threading.Lock()
 
 
@@ -417,7 +582,7 @@ class stateMachineDataPath(object):
                 for pwm in val["PWM"]:
                     if [pwm[0],pwm[1]] not in self.outputsPWM:
                         self.outputsPWM.append([pwm[0],pwm[1]])
-            
+
             self.PWMobjects = {}
             f.close()
 
@@ -430,7 +595,7 @@ class stateMachineDataPath(object):
         try:
             f = open(sensorInitializationJSONfile, "r")
             self.inputsfile = json.loads(f.read())
-            
+
             self.inputNames = []
             for val in self.inputsfile.values():
                 for inputs in val[1]:
@@ -489,6 +654,10 @@ class stateMachineDataPath(object):
             if setup[0]["bus"] == "i2c":
                 t = self.I2Cthread(self, thread, setup[0], setup[1], self.I2Cqueue)
                 self.I2Cthreads.append(t)
+            elif setup[0]["bus"] == "serial":
+                t = self.SERthread(self, thread, setup[0], setup[1], self.I2Cqueue)
+                self.SERthreads.append(t)
+
 
         for key,val in self.digitalInputs.items():
             GPIO.setup(val["location"], GPIO.IN, pull_up_down=getattr(GPIO, val["PUD"]) )
@@ -499,14 +668,27 @@ class stateMachineDataPath(object):
 
 
     def buttonWatch(self, pin, varName):
+        currentState = 0
         while True:
             if not GPIO.input(pin):
-                self.sendQueue.put([varName,1,time.time()])
+                currentState ^= 1
+                self.sendQueue.put([varName,currentState,time.time(), "logic"])
                 time.sleep(1)
 
             time.sleep(0.001)
 
-
+    def timeThread(self):
+        currTime = time.time()
+        time.sleep(1.0)
+        self.sendQueue.put(["state_all_start_time", self.currentState, currTime, "meta"])
+        self.sendQueue.put(["state_%s_start_time"%self.currentState, self.currentState, currTime, "meta"])
+        #print "state_%s_start_time"%self.currentState
+        while True:
+            #print self.currentState
+            self.sendQueue.put(["state_all_curr_time", self.currentState, currTime, "meta"])
+            self.sendQueue.put(["state_%s_curr_time"%self.currentState, self.currentState, currTime, "logic"])
+            time.sleep(1)
+            currTime = time.time()
 
     def initializeOutputs(self):
         """Initializes outputs"""
@@ -525,6 +707,8 @@ class stateMachineDataPath(object):
                     t = self.functionThread(self, func["name"], func["arguments"])
                     t.start()
 
+        t = self.functionThread(self, "timeThread", [])
+        t.start()
 
     def startThreads(self):
         self.incomingDataThread.start()
@@ -532,6 +716,8 @@ class stateMachineDataPath(object):
         self.outputsThread.start()
         self.I2CconsumerThread.start()
         for thread in self.I2Cthreads:
+            thread.start()
+        for thread in self.SERthreads:
             thread.start()
 
 
@@ -556,8 +742,16 @@ class stateMachineDataPath(object):
 
 
 
-    def manualCmd(self):
-        pass
+    def manualCmd(self, cmd):
+        if cmd[1] == "gpio_write":
+            self.writeGPIOoutput(cmd[2], cmd[3])
+        elif cmd[1] == "gpio_read":
+            pass
+        elif cmd[1] == "serial":
+            pass
+        elif cmd[1] == "i2c":
+            pass
+
 
 
     def writeGPIOoutput(self, pin, state):
@@ -582,17 +776,22 @@ class stateMachineDataPath(object):
 
 
     def PWMtest(self):
-        print "starting PWM test..."
+        
+        #for dc in range(0, 100000, 1000):l
+        #    self.pi.hardware_PWM(18, 60, dc)
         #while self.currentState == 2:
-        #self.PWMobjects[14].ChangeDutyCycle(11)
+        #self.PWMobjects[14].ChangeDutyCycle(12)
+        start = 0
         while True:
-            pass
-            #while self.currentState == 1:
-            #    for dc in range(0, 101, 5):
-            #        self.PWMobjects[14].ChangeDutyCycle(dc)
-            #        time.sleep(0.1)
+            if self.currentState == 2:
+                if start == 0:
+                    for dc in range(50000, 100000, 1000):
+                        self.pi.hardware_PWM(18, 60, dc)
+                    start = 1
+            else:
+                start = 0
+                self.pi.hardware_PWM(18, 60, 0)
 
-            #self.PWMobjects[14].ChangeDutyCycle(0)
 
 
     def startFunc(self, name, args):
@@ -634,7 +833,7 @@ if __name__ == "__main__":
     insock.setsockopt(zmq.SUBSCRIBE, '')
     insock.connect("tcp://%s:6000"%sys.argv[1])
 
-    dataPath = stateMachineDataPath(1, "PI_1_Outputs.json", "PI_1_Sensors_Grpthds.json", "PI_1_Buttons.json", insock, outsock)
+    dataPath = stateMachineDataPath(1, "Outputs_test.json", "PI_sensors_logic_test.json", "PI_1_Buttons.json", insock, outsock)
 
     globalLock = threading.Lock()
     dataPath.initializeInputsAndSensors()
@@ -649,6 +848,7 @@ if __name__ == "__main__":
             if exitFlag == 1:
                 print "Stopping Threads.."
                 dataPath.stopThreads()
+                dataPath.pi.hardware_PWM(18, 60, 0)
                 GPIO.cleanup()
                 sys.exit()
         except (SyntaxError, NameError):
