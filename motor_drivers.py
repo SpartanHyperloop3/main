@@ -4,7 +4,10 @@ from struct import *
 from serial import Serial
 from math import exp, expm1
 import TMCL
+import time
 
+
+##motors 2 and 3 are commented out for testing purposes with only 2 motors.
 ## serial-address as set on the TMCM module.
 MODULE_ADDRESS = 1
 
@@ -246,7 +249,8 @@ def fwd():
     motor3.send(5, 0, 0, 5730)
     print("Motor 3 Target Position: %s" % (motor3.send(6,0,0,0)))
 
-     ##WAIT FOR EVENT CODE NEEDED
+     ##WAIT FOR EVENT CODE NEEDED -- placeholder for now
+    time.sleep(5)
     
 def rev():
     ##set target position
@@ -256,8 +260,9 @@ def rev():
     motor2.send(5, 0, 0, 0)
     motor3.send(5, 0, 0, 0)
 
-    ##WAIT FOR EVENT CODE NEEDED
-
+    ##WAIT FOR EVENT CODE NEEDED --placeholder for now
+    time.sleep(5)
+    
     ##disable velocity ramp
     print("Disabling velocity ramp...")
     motor0.send(5, 146, 0, 0)
