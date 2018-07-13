@@ -677,18 +677,6 @@ class stateMachineDataPath(object):
 
             time.sleep(0.001)
 
-    def timeThread(self):
-        currTime = time.time()
-        time.sleep(1.0)
-        self.sendQueue.put(["state_all_start_time", self.currentState, currTime, "meta"])
-        self.sendQueue.put(["state_%s_start_time"%self.currentState, self.currentState, currTime, "meta"])
-        #print "state_%s_start_time"%self.currentState
-        while True:
-            #print self.currentState
-            self.sendQueue.put(["state_all_curr_time", self.currentState, currTime, "meta"])
-            self.sendQueue.put(["state_%s_curr_time"%self.currentState, self.currentState, currTime, "logic"])
-            time.sleep(1)
-            currTime = time.time()
 
     def initializeOutputs(self):
         """Initializes outputs"""
