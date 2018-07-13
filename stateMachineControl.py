@@ -180,11 +180,21 @@ class stateMachineControl(object):
                     self.control.inputLogicHasBeenUpdated.clear()
                     if self.control.setNextState():
                         #self.control.stateHasChanged.set()
+                        print self.control.currentState
+                        self.control.rawData.updateEntry("state_%s_start_time"%self.control.currentState, [self.control.currentState, time.time()])
+                        print self.control.rawData.getCurrentTimeFor("state_%s_start_time"%self.control.currentState)
                         self.control.broadcastStateQueue.put(["state", self.control.currentState])
+                        self.clearTimeouts()
 
         def stop(self):
             self._killFlag.set()
 
+        def clearTimeouts(self):
+            for state in self.control.stateList:
+                if "state_%s_curr_time"%state in self.control.inputLogicNameByDataName.keys():
+                    for stateVariable in self.control.inputLogicNameByDataName["state_%s_curr_time"%state]:
+                        print stateVariable
+                        self.control.inputLogicState[stateVariable] = 0
 
 
 
@@ -230,7 +240,34 @@ class stateMachineControl(object):
             self._killFlag.set()
 
 
+    class timingThread(threading.Thread):
 
+
+        def __init__(self, control):
+            threading.Thread.__init__(self)
+            self._killFlag = threading.Event()
+            self.control = control
+            self.daemon = True
+
+        def run(self):
+            currTime = time.time()
+            self.control.rawData.updateEntry("state_all_start_time", [self.control.currentState, currTime])
+            self.control.rawData.updateEntry("state_%s_start_time"%self.control.currentState, [self.control.currentState, currTime])
+            while not self._killFlag.is_set():
+                self.control.rawData.updateEntry("state_all_curr_time", [self.control.currentState, currTime])
+                self.control.rawData.updateEntry("state_%s_curr_time"%self.control.currentState, [self.control.currentState, currTime])
+                if "state_%s_curr_time"%self.control.currentState in self.control.inputLogicNameByDataName.keys():
+                    self.control.inputLogicQueue.put("state_%s_curr_time"%self.control.currentState)
+                    print "got here",self.control.currentState
+                time.sleep(1.0)
+                currTime = time.time()
+
+
+
+
+
+        def stop(self):
+            self._killFlag.set()
 
 
     def __init__(self, setInitialState = 0, stateDataJSONfile = None, inputLogicJSONfile = None, incomingSocket = None, outgoingSocket = None):
@@ -292,7 +329,7 @@ class stateMachineControl(object):
         self.incomingDataThread = self.incomingDataThread(self, incomingSocket)
         self.broadcastStateThread = self.broadcastStateThread(self, outgoingSocket, self.broadcastStateQueue)
         self.stateUpdateThread = self.updateStateThread(self)
-
+        self.timingThread = self.timingThread(self)
         #sockets
         self.incomingSocket = incomingSocket
         self.outgoingSocket = outgoingSocket
@@ -303,7 +340,7 @@ class stateMachineControl(object):
             f = open(stateDataJSONfile, "r")
 
             stateJSON = json.loads(f.read())
-            
+
             self.stateList = []
             for state in stateJSON.keys():
                 self.stateList.append(state)
@@ -368,8 +405,8 @@ class stateMachineControl(object):
             #with a rawData value to be found by the rawData name. Because a rawData
             #value may belong to more than one input logic variable (variables found
             #and updated in the inputLogicState hash table) this returns a list.
-            #When more than one input logic variable is found it can be iterated, and
-            #is done so in the consumerThread to allow for updating each input variable
+            #When more than one input logic variable is found it can be iterated, which 
+            #is done in the consumerThread to allow for updating each input variable
             #that is associated with the current rawData name taken from the work queue.
             self.inputLogicNameByDataName = {}
             for key,val in cont.items():
@@ -394,8 +431,9 @@ class stateMachineControl(object):
                 self.sensorInfo[key] = val[1]["raw_data_names"]
             f.close()
             
+            
             #print self.dataValuesPerInputState
-            #print self.inputLogicNameByDataName
+            print self.inputLogicNameByDataName
 
         except IOError:
             print "Could not open JSON file"
@@ -420,14 +458,15 @@ class stateMachineControl(object):
         for state in self.stateList:
             self.rawData.createNewEntry("state_%s_start_time"%state)
             self.rawData.createNewEntry("state_%s_curr_time"%state)
-        #print self.rawData.dataCollectionByType
 
     def startThreads(self):
         """Starts all threads, called in main"""
+        self.timingThread.start()
         self.consumerThread.start()
         self.incomingDataThread.start()
         self.stateUpdateThread.start()
         self.broadcastStateThread.start()
+
 
     def updateState(self, state):
         self.currentState = state
@@ -588,13 +627,13 @@ class stateMachineControl(object):
     def timeDifference(self, sensorName, params):
         startTime = self.rawData.getCurrentTimeFor(params[0])
         currTime = self.rawData.getCurrentTimeFor(sensorName)
- 
+
         try:
             diff = currTime - startTime
-      
+
         except:
             return 0
-       
+
         if currTime == None:
             return 0
         if diff > params[1]:
