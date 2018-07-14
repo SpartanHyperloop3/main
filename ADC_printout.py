@@ -1,3 +1,4 @@
+'''
 import smbus
 import time
 import numpy as np
@@ -39,3 +40,35 @@ pressure_sensor = PressureSensor(resistor_value=200, current_interpolation_list=
                                  pressure_interpolation_list=[0.01, 200, 500],
                                  device_address=105, read_register=48)
 print(pressure_sensor.read())
+'''
+
+import smbus
+import time
+
+device_address = 0x6b
+read_register = 48
+
+bus = smbus.SMBus(1)
+bus.pec = True
+
+
+def read():
+    bus.read_i2c_block_data(device_address, read_register)
+    time.sleep(0.001)
+    return bus.read_i2c_block_data(device_address, read_register)
+
+
+def convert():
+    reading = read()
+    upper = (reading[0] & 15)
+    upper = (upper << 8)
+    total = upper + reading[1]
+    voltage = float(total * .001)
+    voltage_divider = (6.8 + 10) / 6.8
+    return voltage * voltage_divider
+
+
+while (True):
+    time.sleep(0.5)
+    print("ADC Out:")
+    print(convert())
