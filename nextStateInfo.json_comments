@@ -1,8 +1,13 @@
+/* Use this regex to remove c-style block comments:
+
+\/\*(\*(?!\/)|[^*])*\*\/
+
+*/
 {
 
-	"all" : [ 
-		[ 13, 
-			[ 
+	"all" : [
+		[ 13,
+			[
 				{
 					"test1" : 1,
 					"test2" : 1
@@ -13,7 +18,7 @@
 				{
 					"hover_engine_timeout_state_1" : 1
 				},
-				{
+				/*{
 					"battery_A_current" : 1
 				},
 				{
@@ -22,13 +27,13 @@
 				{
 					"battery_C_current" : 1
 				},
-				{	
+				{
 					"battery_D_current" : 1
 				},
 				{
 					"battery_A_temp" : 1
 				},
-				{	
+				{
 					"battery_B_temp" : 1
 				},
 				{
@@ -48,8 +53,8 @@
 				},
 				{
 					"battery_D_voltage" : 1
-				},
-				{
+				},*/
+				/*{
 					"hub_A_rpm" : 1
 				},
 				{
@@ -84,63 +89,15 @@
 				},
 				{
 					"hub_D_voltage" : 1
-				},
-				{
-					"hover_A_rpm" : 1
-				},
-				{
-					"hover_B_rpm" : 1
-				},
-				{
-					"hover_C_rpm" : 1
-				},
-				{
-					"hover_D_rpm" : 1
-				},
-				{
-					"hover_A_current" : 1
-				},
-				{
-					"hover_B_current" : 1
-				},
-				{
-					"hover_C_current" : 1
-				},
-				{
-					"hover_D_current" : 1
-				},
-				{
-					"hover_A_voltage" : 1
-				},
-				{
-					"hover_B_voltage" : 1
-				},
-				{
-					"hover_C_voltage" : 1
-				},
-				{
-					"hover_D_voltage" : 1
-				},
-				{
-					"hover_controller_A_temp" : 1
-				},
-				{
-					"hover_controller_B_temp" : 1
-				},
-				{
-					"hover_controller_C_temp" : 1
-				},
-				{
-					"hover_controller_D_temp" : 1
-				}
+				} */
 			]
 		],
-		[ 54, 
+		[ 54,
 			[
 				{
 					"Enter_Manual_State" : 1
 				}
-			] 
+			]
 		]
 
 	],
@@ -148,7 +105,7 @@
 		[ 18,
 			[
 				{
-					"manual_enter_state_18_ready_2" : 1
+					"manual_enter_state_18_ready_2" : 1 /* needs implemented */
 				}
 			]
 		]
@@ -159,44 +116,38 @@
 		[ 4,
 			[
 				{
-					"manual_enter_state_4_accel_1" : 1
+					"manual_enter_state_4_accel_1" : 1 /* needs implemented */
 				}
 			]
 		]
 	],
-	
+
 	"4" : [
-		[ 5, 
+		[ 5, /* first braking point reached */
 			[
 				{
-					"first_braking_point_reached" : 1
+					"acceleration_timeout_state_4" : 1 /* needs implemented */
+				},
+                {
+					"acceleration_timeout_state_4" : 1 /* needs implemented */
 				}
 			]
 		]
 	],
 	"5" : [
-		[ 7, 
+		[ 7,
 			[
 				{
-					"first_complete_stop" : 1
+					"pod_completely_stopped" : 1 /* needs implemented */
 				}
 			]
 		]
 	],
 	"7" : [
-		[ 8, 
+		[ 8,
 			[
 				{
-					"second_braking_point_reached" : 1
-				}
-			]
-		]
-	],
-	"8" : [
-		[ 9,
-			[
-				{
-					"second_complete_stop" : 1
+					"second_braking_point_reached" : 1 /* needs implemented */
 				}
 			]
 		]
@@ -210,7 +161,7 @@
 				{
 					"Emergency_Override" : 1
 				}
-			]   
+			]
 		]
 	],
 	"1" : [
@@ -219,7 +170,7 @@
 				{
 					"Emergency_Override" : 1
 				}
-			]   
+			]
 		]
 	]
 }
