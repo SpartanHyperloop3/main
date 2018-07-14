@@ -1,8 +1,8 @@
 import RPi.GPIO as GPIO
 
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 
-OUTPUTS = [36, 38, 40]
+OUTPUTS = [22, 27, 17]
 
 for n in OUTPUTS:
 	GPIO.setup(n, GPIO.OUT)
