@@ -1,0 +1,39 @@
+{
+ "221": {
+  "type": "trend",
+  "sensors": [
+   "position",
+   "velocity"
+  ],
+  "title": "Position & Velocity",
+  "time": 10
+ },
+ "224": {
+  "type": "trend",
+  "sensors": [
+   "proximity1",
+   "proximity2"
+  ],
+  "title": "Proximity",
+  "time": 8
+ },
+ "222": {
+  "type": "trend",
+  "sensors": [
+   "temperature1",
+   "temperature2"
+  ],
+  "title": "Temperature",
+  "time": 15
+ },
+ "223": {
+  "type": "line",
+  "sensors": [
+   "voltage1",
+   "voltage2",
+   "voltage3"
+  ],
+  "title": "Voltage",
+  "time": 12
+ }
+}

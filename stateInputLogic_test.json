@@ -1,0 +1,82 @@
+{
+ "test1": [
+  0,
+  {
+   "raw_data_names": {
+    "voltage 1": {
+     "digital": 0,
+     "params": [
+      11.5,
+      12.5
+     ],
+     "raw_data_units": "volts"
+    }
+   },
+   "typeOfLogic": "range"
+  }
+ ],
+ "test2": [
+  0,
+  {
+   "raw_data_names": {
+    "voltage 2": {
+     "digital": 0,
+     "params": [
+      11.5,
+      12.5
+     ],
+     "raw_data_units": "volts"
+    }
+   },
+   "typeOfLogic": "range"
+  }
+ ],
+ "test3": [
+  0,
+  {
+   "raw_data_names": {
+    "voltage 3": {
+     "digital": 0,
+     "params": [
+      11.5,
+      12.5
+     ],
+     "raw_data_units": "volts"
+    }
+   },
+   "typeOfLogic": "range"
+  }
+ ],
+ "test4": [
+  0,
+  {
+   "raw_data_names": {
+    "temperature 1": {
+     "digital": 0,
+     "params": [
+      40,
+      45
+     ],
+     "raw_data_units": "Celcius"
+    }
+   },
+   "typeOfLogic": "range"
+  }
+ ],
+ "test5": [
+  0,
+  {
+   "raw_data_names": {
+    "temperature 2": {
+     "digital": 0,
+     "params": [
+      40,
+      45
+     ],
+     "raw_data_units": "Celcius"
+    }
+   },
+   "typeOfLogic": "range"
+  }
+ ]
+}
