@@ -79,26 +79,29 @@ def read_json(read_file):
 
 plot_details = read_json('plot_details.json')
 
+sensor_time_dict = {}
+
 
 def create_sensor_time_dict():
-    global sensor_time_dict
-    sensor_time_dict = {}
+    #global sensor_time_dict
+    #sensor_time_dict = {}
     for i in plot_details:
-        timelen = plot_details[i]['time']
+        #timelen = plot_details[i]['time']
         for j in plot_details[i]['sensors']:
-            sensor_refresh = {j:timelen}
-            sensor_time_dict = dict(sensor_refresh.items() + sensor_time_dict.items())
+            #sensor_refresh = {j:timelen}
+            #sensor_time_dict = dict(sensor_refresh.items() + sensor_time_dict.items())
+            sensor_time_dict[j] = plot_details[i]['time']
     print("sensor time dictionary  ", sensor_time_dict)
 #print("sensors_json = ", sensors_json)
 
 def maintain_list():
-    global sensor_data_dict
-    sensor_data_dict = {}
+    #global sensor_data_dict
+    #sensor_data_dict = {}
     #for h in sensors_json:
         #print(h[1])
         #print(h[0])
         #sensordata = {}
-    for sensor_name in sensor_names:
+    for sensor_name in sensor_time_dict:
         timelength = sensor_time_dict[sensor_name]
         #print(timelength)
         if sensor_readings[sensor_name][1][-1] - sensor_readings[sensor_name][1][0] == 0:
@@ -109,7 +112,7 @@ def maintain_list():
     return sensor_readings
 
 
-#create_sensor_time_dict()
+create_sensor_time_dict()
 #maintain_list()
 
 
