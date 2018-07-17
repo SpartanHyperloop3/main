@@ -146,14 +146,26 @@ def process_sensor_ranges(file_input='stateInputLogic_test.json'):
             if key2 in value1['sensors']:
                 value1['range'] = value2
 
+def store_incoming_json(incoming_json):
+    #write incoming json to storage dictionary
+    #check for sensors that aren't in dictionary and add them
+    pass
+
+def update_plotting_data():
+    pass
+
+def log_and_purse_sensor_data():
+    pass
+
+sensor_data_storage = []
 
 plot_details = read_json('plot_details.json')
-sensor_data_raw = read_json('sensor_data_raw_test.json')
 process_sensor_ranges()
+
+sensor_data_raw = read_json('sensor_data_raw_test.json')
 
 trend_plot = TrendPlot(plot_details, sensor_data)
 line_plot = LinePlot(plot_details, sensor_data)
-
 
 while(True):
     index_start = time.time()
