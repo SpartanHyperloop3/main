@@ -3,7 +3,7 @@
   0,
   {
    "raw_data_names": {
-    "voltage 1": {
+    "voltage1": {
      "digital": 0,
      "params": [
       11.5,
@@ -19,7 +19,7 @@
   0,
   {
    "raw_data_names": {
-    "voltage 2": {
+    "voltage2": {
      "digital": 0,
      "params": [
       11.5,
@@ -35,7 +35,7 @@
   0,
   {
    "raw_data_names": {
-    "voltage 3": {
+    "voltage3": {
      "digital": 0,
      "params": [
       11.5,
@@ -51,7 +51,7 @@
   0,
   {
    "raw_data_names": {
-    "temperature 1": {
+    "temperature1": {
      "digital": 0,
      "params": [
       40,
@@ -67,7 +67,7 @@
   0,
   {
    "raw_data_names": {
-    "temperature 2": {
+    "temperature2": {
      "digital": 0,
      "params": [
       40,
