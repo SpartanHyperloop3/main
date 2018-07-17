@@ -5,31 +5,35 @@
    "position",
    "velocity"
   ],
-  "title": "Position & Velocity"
+  "title": "Position & Velocity",
+  "time": 10
  },
  "224": {
   "type": "trend",
   "sensors": [
-   "proximity 1",
-   "proximity 2"
+   "proximity1",
+   "proximity2"
   ],
-  "title": "Proximity"
+  "title": "Proximity",
+  "time": 8
  },
  "222": {
   "type": "trend",
   "sensors": [
-   "temperature 1",
-   "temperature 2"
+   "temperature1",
+   "temperature2"
   ],
-  "title": "Temperature"
+  "title": "Temperature",
+  "time": 15
  },
  "223": {
   "type": "line",
   "sensors": [
-   "voltage 1",
-   "voltage 2",
-   "voltage 3"
+   "voltage1",
+   "voltage2",
+   "voltage3"
   ],
-  "title": "Voltage"
+  "title": "Voltage",
+  "time": 12
  }
 }
