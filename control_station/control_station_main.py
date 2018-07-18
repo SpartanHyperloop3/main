@@ -1,7 +1,4 @@
-import time
-
 #local libraries
-import graph
 import receive_and_parse
 
 '''
@@ -18,7 +15,7 @@ while(True):
     time.sleep(5)
 '''
 
-receive_and_parse.setup('127.0.0.1','6000')
+receive_and_parse.setup('127.0.0.1', '6000')
 print(receive_and_parse.graph_time_limit)
 while(True):
     raw_input('wait...')
