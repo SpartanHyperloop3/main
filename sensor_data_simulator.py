@@ -1,16 +1,3 @@
-'''import zmq
-import time
-
-context = zmq.Context()
-incomingSocket = context.socket(zmq.SUB)
-incomingSocket.setsockopt(zmq.SUBSCRIBE,'')
-incomingSocket.connect("tcp://127.0.0.1:6000")
-
-while(True):
-    message = incomingSocket.recv_string()
-    print(message)
-'''
-
 import zmq
 import time
 import json
@@ -20,7 +7,7 @@ def read_json(read_file):
     with open(read_file, 'r') as file:
         return json.loads(file.read())
 
-def initialize_zmq_outgoing(address='127.0.0.1', port='6000'):
+def initialize_zmq_outgoing(address, port):
     context = zmq.Context()
     outgoing_socket = context.socket(zmq.PUB)
     outgoing_socket.bind('tcp://'+address+':'+port)
@@ -51,9 +38,10 @@ class generateSensorJson():
 
 
 generate_sensor_json = generateSensorJson(read_json('sensor_data_raw_test.json'), 3)
-out_sock = initialize_zmq_outgoing()
+out_sock = initialize_zmq_outgoing('127.0.0.1', '6000')
 
 while (True):
+    #raw_input('wait...')
     generate_sensor_json.chunkSize = random.randint(1, 5)
     out_sock.send_json(generate_sensor_json.generateJson())
     time.sleep(random.random()*4)

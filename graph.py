@@ -1,43 +1,6 @@
 import matplotlib.pyplot as plt
-from drawnow import *
+import drawnow
 import json
-
-# ----- Start of test _data and functions -----
-import time
-
-sensor_data = {}
-index_trend = 0
-index_trend_leap = 7
-trend_length = 30
-total_trend_length = 60
-
-index_line = 0
-total_line_length = 33
-
-sensor_details = []
-
-def index_update():
-    global index_trend, index_line
-    for key, value in plot_details.items():
-
-        if value['type'] == 'trend':
-            for n in value['sensors']:
-                sensor_data[n] = [sensor_data_raw[n][0][index_trend:index_trend + trend_length],
-                                  sensor_data_raw[n][1][index_trend:index_trend + trend_length]]
-
-        if value['type'] == 'line':
-            for n in value['sensors']:
-                sensor_data[n] = sensor_data_raw[n][index_line]
-
-    index_trend += index_trend_leap
-    if index_trend >= total_trend_length:
-        index_trend = 0
-
-    index_line += 1
-    if index_line >= total_line_length:
-        index_line = 0
-
-# ----- End of test _data and functions -----
 
 class BasicPlot():
 
@@ -111,8 +74,8 @@ class LinePlot(BasicPlot):
                 emergency_range.append(nominal_range[0] - (nominal_range[1] - nominal_range[0]) / 2)
                 emergency_range.append(nominal_range[1] + (nominal_range[1] - nominal_range[0]) / 2)
             for i, sensor in list(enumerate(value['sensors'])):
-                plt.plot([self.sensorData[sensor], self.sensorData[sensor]], [i+self.lineBottom, i+self.lineTop], color='black')
-                plt.text(self.sensorData[sensor], i + self.textReadingHeight, self.sensorData[sensor], horizontalalignment='center')
+                plt.plot([self.sensorData[sensor][0][0], self.sensorData[sensor][0][0]], [i+self.lineBottom, i+self.lineTop], color='black')
+                plt.text(self.sensorData[sensor][0][0], i + self.textReadingHeight, self.sensorData[sensor][0][0], horizontalalignment='center')
                 if value.has_key('range'):
                     plt.text(nominal_range[0], i+self.textLimitHeight, nominal_range[0], horizontalalignment='right')
                     plt.text(nominal_range[1], i + self.textLimitHeight, nominal_range[1], horizontalalignment='left')
@@ -143,38 +106,22 @@ def process_sensor_ranges(file_input='stateInputLogic_test.json'):
             if key2 in value1['sensors']:
                 value1['range'] = value2
 
-def store_incoming_json(incoming_json):
-    '''write incoming json to storage dictionary
-    #check for sensors that aren't in dictionary and add them'''
-    pass
+def setup(data):
+    global plot_details, trend_plot, line_plot
+    plot_details = read_json('plot_details.json')
+    process_sensor_ranges()
 
-def update_plotting_data():
-    '''update the dictionary of lists that is sent to the graphing function with the right
-    length as stated in the plot_details'''
-    pass
+    trend_plot = TrendPlot(plot_details, data)
+    line_plot = LinePlot(plot_details, data)
 
-def log_and_purse_sensor_data():
-    '''periodically review the dictionary storing plotting _data and store unneeded _data to CSV
-    then purge from dictionary'''
-    pass
+def graph():
+    drawnow.drawnow(all_plots)
 
-sensor_data_storage = {}
-
-plot_details = read_json('plot_details.json')
-process_sensor_ranges()
-
-sensor_data_raw = read_json('sensor_data_raw_test.json')
-
-trend_plot = TrendPlot(plot_details, sensor_data)
-line_plot = LinePlot(plot_details, sensor_data)
-
+'''
 while(True):
-    index_start = time.time()
-    index_update()
-    index_end = time.time()
-    print('index_trend: %.5f' % (index_end - index_start))
     plot_start = time.time()
     drawnow(all_plots)
     plot_end = time.time()
     print('plot: %.5f' % (plot_end - plot_start))
     #time.sleep(1)
+'''

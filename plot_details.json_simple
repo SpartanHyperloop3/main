@@ -1,0 +1,10 @@
+{
+ "223": {
+  "type": "line",
+  "sensors": [
+   "voltage1"
+  ],
+  "title": "Voltage",
+  "time": 12
+ }
+}
