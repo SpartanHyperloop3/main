@@ -19,4 +19,7 @@ while(True):
 '''
 
 receive_and_parse.setup('127.0.0.1','6000')
-receive_and_parse.receive_and_parse()
+print(receive_and_parse.graph_time_limit)
+while(True):
+    raw_input('wait...')
+    receive_and_parse.receive_and_parse()
