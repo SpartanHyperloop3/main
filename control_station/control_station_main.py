@@ -1,22 +1,17 @@
 #local libraries
+import graph
 import receive_and_parse
-
-'''
-test = {
-    'voltage1' : [[2],[2.0]]
-}
-graph.setup(test)
-
-graph.graph()
-test['voltage1'] = [[10],[2.1]]
-time.sleep(3)
-graph.graph()
-while(True):
-    time.sleep(5)
-'''
+import time
 
 receive_and_parse.setup('127.0.0.1', '6000')
-print(receive_and_parse.graph_time_limit)
+graph.setup(receive_and_parse.graph_data)
+
 while(True):
-    raw_input('wait...')
+    receive_start = time.time()
     receive_and_parse.receive_and_parse()
+    receive_end = time.time()
+    print('receive duration: %.5f' % (receive_end - receive_start))
+    graph_start = time.time()
+    graph.graph()
+    graph_end = time.time()
+    print('graph duration: %.5f' % (graph_end - graph_start))

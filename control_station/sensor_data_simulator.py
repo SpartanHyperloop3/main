@@ -37,11 +37,11 @@ class generateSensorJson():
         return output_json
 
 
-generate_sensor_json = generateSensorJson(read_json('sensor_data_raw_test.json'), 3)
+generate_sensor_json = generateSensorJson(read_json('sensor_data_raw_test.json'), 20)
 out_sock = initialize_zmq_outgoing('127.0.0.1', '6000')
 
 while (True):
     #raw_input('wait...')
     generate_sensor_json.chunkSize = random.randint(1, 5)
     out_sock.send_json(generate_sensor_json.generateJson())
-    time.sleep(random.random()*4)
+    #time.sleep(random.random())
