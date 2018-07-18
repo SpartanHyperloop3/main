@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from drawnow import *
 import json
 
-# ----- Start of test data and functions -----
+# ----- Start of test _data and functions -----
 import time
 
 
@@ -153,7 +153,7 @@ def index_update():
     if index_line >= total_line_length:
         index_line = 0
 
-# ----- End of test data and functions -----
+# ----- End of test _data and functions -----
 """
 class BasicPlot():
 

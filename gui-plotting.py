@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from drawnow import *
 import json
 
-# ----- Start of test data and functions -----
+# ----- Start of test _data and functions -----
 import time
 
 sensor_data = {}
@@ -37,7 +37,7 @@ def index_update():
     if index_line >= total_line_length:
         index_line = 0
 
-# ----- End of test data and functions -----
+# ----- End of test _data and functions -----
 
 class BasicPlot():
 
@@ -85,7 +85,6 @@ class TrendPlot(BasicPlot):
                 plt.fill_between([x_min, x_max], [nominal_range[0], nominal_range[0]],
                                  [nominal_range[1], nominal_range[1]], alpha=0.3, color='green')
 
-
 class LinePlot(BasicPlot):
 
     def __init__(self, plot_details, sensor_data):
@@ -122,8 +121,6 @@ class LinePlot(BasicPlot):
                     plt.fill_between([nominal_range[1], emergency_range[1]], [i, i], [i + 1, i + 1], alpha=0.3, color='red')
                     plt.fill_between([nominal_range[0], nominal_range[1]], [i, i], [i+1, i+1], alpha=0.3, color='green')
 
-
-
 def all_plots():
     trend_plot.drawTrend()
     line_plot.drawLine()
@@ -147,17 +144,21 @@ def process_sensor_ranges(file_input='stateInputLogic_test.json'):
                 value1['range'] = value2
 
 def store_incoming_json(incoming_json):
-    #write incoming json to storage dictionary
-    #check for sensors that aren't in dictionary and add them
+    '''write incoming json to storage dictionary
+    #check for sensors that aren't in dictionary and add them'''
     pass
 
 def update_plotting_data():
+    '''update the dictionary of lists that is sent to the graphing function with the right
+    length as stated in the plot_details'''
     pass
 
 def log_and_purse_sensor_data():
+    '''periodically review the dictionary storing plotting _data and store unneeded _data to CSV
+    then purge from dictionary'''
     pass
 
-sensor_data_storage = []
+sensor_data_storage = {}
 
 plot_details = read_json('plot_details.json')
 process_sensor_ranges()
