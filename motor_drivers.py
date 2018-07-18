@@ -230,24 +230,24 @@ def fwd():
     ##enable velocity ramp
     print("Enabling Position Mode...")
     motor0.send(5, 146, 0, 1)
-    print("Motor 0 Velocity Ramp: %s" % (motor0.send(6,146,0,0)))
+    print("Motor 0 Velocity Ramp: %s" % (motor0.get(146)))
     motor1.send(5, 146, 0, 1)
-    print("Motor 1 Velocity Ramp: %s" % (motor1.send(6,146,0,0)))
+    print("Motor 1 Velocity Ramp: %s" % (motor1.get(146)))
     motor2.send(5, 146, 0, 1)
-    print("Motor 2 Velocity Ramp: %s" % (motor2.send(6,146,0,0)))
+    print("Motor 2 Velocity Ramp: %s" % (motor2.get(146)))
     motor3.send(5, 146, 0, 1)
-    print("Motor 3 Velocity Ramp: %s" % (motor3.send(6,146,0,0)))
+    print("Motor 3 Velocity Ramp: %s" % (motor3.get(146)))
 
     ## set target position
     print("Target Position set to 75ft.")
     motor0.send(5, 0, 0, 5730)
-    print("Motor 0 Target Position: %s" % (motor0.send(6,0,0,0)))
+    print("Motor 0 Target Position: %s" % (motor0.get(0)))
     motor1.send(5, 0, 0, 5730)
-    print("Motor 0 Target Position: %s" % (motor1.send(6,0,0,0)))
+    print("Motor 0 Target Position: %s" % (motor1.get(0)))
     motor2.send(5, 0, 0, 5730)
-    print("Motor 2 Target Position: %s" % (motor2.send(6,0,0,0)))
+    print("Motor 2 Target Position: %s" % (motor2.get(0)))
     motor3.send(5, 0, 0, 5730)
-    print("Motor 3 Target Position: %s" % (motor3.send(6,0,0,0)))
+    print("Motor 3 Target Position: %s" % (motor3.get(0)))
 
      ##WAIT FOR EVENT CODE NEEDED -- placeholder for now
     time.sleep(5)
@@ -266,13 +266,13 @@ def rev():
     ##disable velocity ramp
     print("Disabling velocity ramp...")
     motor0.send(5, 146, 0, 0)
-    print("Motor 0 Velocity Ramp: %s" % (motor0.send(6,146,0,0)))
+    print("Motor 0 Velocity Ramp: %s" % (motor0.get(146)))
     motor1.send(5, 146, 0, 0)
-    print("Motor 1 Velocity Ramp: %s" % (motor0.send(6,146,0,0)))
+    print("Motor 1 Velocity Ramp: %s" % (motor0.get(146)))
     motor2.send(5, 146, 0, 0)
-    print("Motor 2 Velocity Ramp: %s" % (motor0.send(6,146,0,0)))
+    print("Motor 2 Velocity Ramp: %s" % (motor0.get(146)))
     motor3.send(5, 146, 0, 0)
-    print("Motor 3 Velocity Ramp: %s" % (motor0.send(6,146,0,0)))
+    print("Motor 3 Velocity Ramp: %s" % (motor0.get(146)))
 
     ##stop motor
     print("Motors stopped.")
@@ -283,67 +283,67 @@ def rev():
 
 
 def readMotor0RPM():
-    print("Motor 0 RPM: %s" % (motor0.send(6,3,0,0)))
-    return motor0.send(6,3,0,0)
+    print("Motor 0 RPM: %s" % (motor0.get(3)))
+    return motor0.get(3)
 def readMotor1RPM():
-    print("Motor 1 RPM: %s" % (motor1.send(6,3,0,0)))
-    return motor1.send(6,3,0,0)
+    print("Motor 1 RPM: %s" % (motor1.get(3)))
+    return motor1.get(3)
 def readMotor2RPM():
-    print("Motor 2 RPM: %s" % (motor2.send(6,3,0,0)))
-    return motor2.send(6,3,0,0)
+    print("Motor 2 RPM: %s" % (motor2.get(3)))
+    return motor2.get(3)
 def readMotor3RPM():
-    print("Motor 3 RPM: %s" % (motor3.send(6,3,0,0)))
-    return motor3.send(6,3,0,0)
+    print("Motor 3 RPM: %s" % (motor3.get(3)))
+    return motor3.get(3)
     
 def readMotor0Pos():
-    print("Motor 0 Pos(ft): %s" % (motor0.send(6,1,0,0)))
-    return motor0.send(6,1,0,0)
+    print("Motor 0 Pos(ft): %s" % (motor0.get(1)))
+    return motor0.get(1)
 def readMotor1Pos():
-    print("Motor 1 Pos(ft): %s" % (motor1.send(6,1,0,0)))
-    return motor1.send(6,1,0,0)
+    print("Motor 1 Pos(ft): %s" % (motor1.get(1)))
+    return motor1.get(1)
 def readMotor2Pos():
-    print("Motor 2 Pos(ft): %s" % (motor2.send(6,1,0,0)))
-    return motor2.send(6,1,0,0)
+    print("Motor 2 Pos(ft): %s" % (motor2.get(1)))
+    return motor2.get(1)
 def readMotor3Pos():
-    print("Motor 3 Pos(ft): %s" % (motor3.send(6,1,0,0)))
-    return motor3.send(6,1,0,0)
+    print("Motor 3 Pos(ft): %s" % (motor3.get(1)))
+    return motor3.get(1)
     
 def readMotor0Current():
-    print("Motor 0 Current(mA): %s" % (motor0.send(6,150,0,0)))
-    return motor0.send(6,150,0,0)
+    print("Motor 0 Current(mA): %s" % (motor0.get(150)))
+    return motor0.get(150)
 def readMotor1Current():
-    print("Motor 1 Current(mA): %s" % (motor1.send(6,150,0,0)))
-    return motor1.send(6,150,0,0)
+    print("Motor 1 Current(mA): %s" % (motor1.get(150)))
+    return motor1.get(150)
 def readMotor2Current():
-    print("Motor 2 Current(mA): %s" % (motor2.send(6,150,0,0)))
-    return motor2.send(6,150,0,0)
+    print("Motor 2 Current(mA): %s" % (motor2.get(150)))
+    return motor2.get(150)
 def readMotor3Current():
-    print("Motor 3 Current(mA): %s" % (motor3.send(6,150,0,0)))
-    return motor3.send(6,150,0,0)
+    print("Motor 3 Current(mA): %s" % (motor3.get(150)))
+    return motor3.get(150)
 
 def readBoard0Temp():
-    ADC0 = motor0.send(6,152,0,0)
+    ADC0 = motor0.get(152)
     B = 3434
     RNTC0 = (9011.2/ADC0) - 2.2
     board0Temp = ((B * 298.16)/(B + (math.log(RNTC0/10)*298.16)))- 273.16
     print("Trinamic 0 Temperature(C): %s" % (board0Temp))
     return board0Temp
 def readBoard1Temp():
-    ADC1 = motor1.send(6,152,0,0)
+    ADC1 = motor1.get(152)
     B = 3434
     RNTC1 = (9011.2/ADC1) - 2.2
     board1Temp = ((B * 298.16)/(B + (math.log(RNTC1/10)*298.16)))- 273.16
     print("Trinamic 1 Temperature(C): %s" % (board1Temp))
     return board1Temp
 def readBoard2Temp():
-    ADC2 = motor2.send(6,152,0,0)
+    ADC2 = motor2.get(152)
     B = 3434
     RNTC2 = (9011.2/ADC2) - 2.2
     board2Temp = ((B * 298.16)/(B + (math.log(RNTC2/10)*298.16)))- 273.16
     print("Trinamic 2 Temperature(C): %s" % (board2Temp))
     return board2Temp
 def readBoard3Temp():
-    ADC3 = motor3.send(6,152,0,0)
+    ADC3 = motor3.get(152)
     B = 3434
     RNTC3 = (9011.2/ADC3) - 2.2
     board3Temp = ((B * 298.16)/(B + (math.log(RNTC3/10)*298.16)))- 273.16
@@ -351,45 +351,45 @@ def readBoard3Temp():
     return board3Temp
     
 def readBoard0Voltage():
-    print("Trinamic 0 Supply Voltage(V): %s" % (motor0.send(6,151,0,0)))
-    return motor0.send(6,151,0,0)
+    print("Trinamic 0 Supply Voltage(V): %s" % (motor0.get(151)))
+    return motor0.get(151)
 def readBoard1Voltage():
-    print("Trinamic 1 Supply Voltage(V): %s" % (motor1.send(6,151,0,0)))
-    return motor1.send(6,151,0,0)
+    print("Trinamic 1 Supply Voltage(V): %s" % (motor1.get(151)))
+    return motor1.get(151)
 def readBoard2Voltage():
-    print("Trinamic 2 Supply Voltage(V): %s" % (motor2.send(6,151,0,0)))
-    return motor2.send(6,151,0,0)
+    print("Trinamic 2 Supply Voltage(V): %s" % (motor2.get(151)))
+    return motor2.get(151)
 def readBoard3Voltage():
-    print("Trinamic 3 Supply Voltage(V): %s" % (motor3.send(6,151,0,0)))
-    return motor3.send(6,151,0,0)
+    print("Trinamic 3 Supply Voltage(V): %s" % (motor3.get(151)))
+    return motor3.get(151)
 
 
 def readModule0RunTime(): 
-    print("Trinamic 0 Runtime(min): %s" % (motor0.send(6,30,0,0)))
-    return motor0.send(6,30,0,0)
+    print("Trinamic 0 Runtime(min): %s" % (motor0.get(30)))
+    return motor0.get(30)
 def readModule1RunTime():
-    print("Trinamic 1 Runtime(min): %s" % (motor1.send(6,30,0,0)))
-    return motor1.send(6,30,0,0)
+    print("Trinamic 1 Runtime(min): %s" % (motor1.get(30)))
+    return motor1.get(30)
 def readModule2RunTime(): 
-    print("Trinamic 2 Runtime(min): %s" % (motor2.send(6,30,0,0)))
-    return motor2.send(6,30,0,0)
+    print("Trinamic 2 Runtime(min): %s" % (motor2.get(30)))
+    return motor2.get(30)
 def readModule3RunTime(): 
-    print("Trinamic 3 Runtime(min): %s" % (motor3.send(6,30,0,0)))
-    return motor3.send(6,30,0,0)
+    print("Trinamic 3 Runtime(min): %s" % (motor3.get(30)))
+    return motor3.get(30)
 
 
 def readErrorFlags0():
-    print("Trinamic 0 Error Flags: %s" % (motor0.send(6,156,0,0)))
-    return motor0.send(6,156,0,0)
+    print("Trinamic 0 Error Flags: %s" % (motor0.get(156)))
+    return motor0.get(156)
 def readErrorFlags1():
-    print("Trinamic 1 Error Flags: %s" % (motor1.send(6,156,0,0)))
-    return motor1.send(6,156,0,0)
+    print("Trinamic 1 Error Flags: %s" % (motor1.get(156)))
+    return motor1.get(156)
 def readErrorFlags2():
-    print("Trinamic 2 Error Flags: %s" % (motor2.send(6,156,0,0)))
-    return motor2.send(6,156,0,0)
+    print("Trinamic 2 Error Flags: %s" % (motor2.get(156)))
+    return motor2.get(156)
 def readErrorFlags3():
-    print("Trinamic 3 Error Flags: %s" % (motor3.send(6,156,0,0)))
-    return motor3.send(6,156,0,0)
+    print("Trinamic 3 Error Flags: %s" % (motor3.get(156)))
+    return motor3.get(156)
 
 def clearIIT0():
     print("Clearing IIT flags of Module 0..")
@@ -406,27 +406,27 @@ def clearIIT3():
 
 
 def readIIT0():
-    print("Motor 0 Thermal Winding Constant: %s" % (motor0.send(6,25,0,0)))
-    print("Motor 0 IIT Limit: %s" % (motor0.send(6,26,0,0)))
-    print("Motor 0 IIT Sum: %s" % (motor0.send(6,27,0,0)))
-    print("Motor 0 IIT Exceed Counter: %s" % (motor0.send(6,28,0,0)))
-    return motor0.send(6,27,0,0)
+    print("Motor 0 Thermal Winding Constant: %s" % (motor0.get(25)))
+    print("Motor 0 IIT Limit: %s" % (motor0.get(26)))
+    print("Motor 0 IIT Sum: %s" % (motor0.get(27)))
+    print("Motor 0 IIT Exceed Counter: %s" % (motor0.get(28)))
+    return motor0.get(27)
 def readIIT1():
-    print("Motor 1 Thermal Winding Constant: %s" % (motor1.send(6,25,0,0)))
-    print("Motor 1 IIT Limit: %s" % (motor1.send(6,26,0,0)))
-    print("Motor 1 IIT Sum: %s" % (motor1.send(6,27,0,0)))
-    print("Motor 1 IIT Exceed Counter: %s" % (motor1.send(6,28,0,0)))
-    return motor1.send(6,27,0,0)
+    print("Motor 1 Thermal Winding Constant: %s" % (motor1.get(25)))
+    print("Motor 1 IIT Limit: %s" % (motor1.get(26)))
+    print("Motor 1 IIT Sum: %s" % (motor1.get(27)))
+    print("Motor 1 IIT Exceed Counter: %s" % (motor1.get(28)))
+    return motor1.get(27)
 def readIIT2():
-    print("Motor 2 Thermal Winding Constant: %s" % (motor2.send(6,25,0,0)))
-    print("Motor 2 IIT Limit: %s" % (motor2.send(6,26,0,0)))
-    print("Motor 2 IIT Sum: %s" % (motor2.send(6,27,0,0)))
-    print("Motor 2 IIT Exceed Counter: %s" % (motor2.send(6,28,0,0)))
-    return motor2.send(6,27,0,0)
+    print("Motor 2 Thermal Winding Constant: %s" % (motor2.get(25)))
+    print("Motor 2 IIT Limit: %s" % (motor2.get(26)))
+    print("Motor 2 IIT Sum: %s" % (motor2.get(27)))
+    print("Motor 2 IIT Exceed Counter: %s" % (motor2.get(28)))
+    return motor2.get(27)
 def readIIT3():
-    print("Motor 3 Thermal Winding Constant: %s" % (motor3.send(6,25,0,0)))
-    print("Motor 3 IIT Limit: %s" % (motor3.send(6,26,0,0)))
-    print("Motor 3 IIT Sum: %s" % (motor3.send(6,27,0,0)))
-    print("Motor 3 IIT Exceed Counter: %s" % (motor3.send(6,28,0,0)))
-    return motor3.send(6,27,0,0)
+    print("Motor 3 Thermal Winding Constant: %s" % (motor3.get(25)))
+    print("Motor 3 IIT Limit: %s" % (motor3.get(26)))
+    print("Motor 3 IIT Sum: %s" % (motor3.get(27)))
+    print("Motor 3 IIT Exceed Counter: %s" % (motor3.get(28)))
+    return motor3.get(27)
     
