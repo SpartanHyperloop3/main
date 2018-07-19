@@ -53,15 +53,20 @@ def update_plotting_data():
 def log_and_purge_sensor_data(buffer_factor):
     '''periodically review the dictionary storing plotting _data and store unneeded _data to CSV
     then purge from dictionary'''
-    #max(dict.values())
-    #only look at max sensor? then cull at that point? but skip sensors with time limit of 0
-    for sensor in graph_time_limit:
-        max(data_storage[sensor][1]) - min(data_storage[sensor][1])
-    if
-    pass
+
+    # buffer_factor times max allowed time is less than total stored time, then we clear data_storage
+    if (graph_time_limit[max_time_limit_sensor] * buffer_factor <
+            max(data_storage[max_time_limit_sensor][1]) - min(data_storage[max_time_limit_sensor][1])):
+        for sensor in graph_time_limit:
+            # for 0, send all data all the time, so don't adjust graph_slice_start and don't update data_storage
+            if graph_time_limit[sensor] == 0:
+                pass
+            else:
+                data_storage[sensor] = [data_storage[sensor][0][graph_slice_start[sensor]:], data_storage[sensor][1][graph_slice_start[sensor]:]]
+                graph_slice_start[sensor] = 0
 
 def setup(address, port):
-    global data_storage, in_sock, graph_data, graph_time_limit, graph_slice_start
+    global data_storage, in_sock, graph_data, graph_time_limit, graph_slice_start, max_time_limit_sensor
     data_storage = {}
     graph_data = {}
     graph_time_limit = {}
@@ -72,9 +77,10 @@ def setup(address, port):
         for sensor in plot_details[key]['sensors']:
             graph_time_limit[sensor] = float(plot_details[key]['time'])
             graph_slice_start[sensor] = 0
+    max_time_limit_sensor = max(graph_time_limit.iterkeys(), key=(lambda key: graph_time_limit[key]))
 
 def receive_and_parse():
     incoming_json = in_sock.recv_json()
     store_incoming_json(incoming_json)
     update_plotting_data()
-    log_and_purge_sensor_data(10)
+    log_and_purge_sensor_data(buffer_factor=10)

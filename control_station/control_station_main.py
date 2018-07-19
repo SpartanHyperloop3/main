@@ -4,7 +4,7 @@ import receive_and_parse
 import time
 
 receive_and_parse.setup('127.0.0.1', '6000')
-graph.setup(receive_and_parse.graph_data)
+graph.setup('plot_details.json', 'stateInputLogic_test.json', receive_and_parse.graph_data)
 
 while(True):
     receive_start = time.time()

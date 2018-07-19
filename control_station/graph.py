@@ -92,7 +92,7 @@ def read_json(read_file):
     with open(read_file, 'r') as file:
         return json.loads(file.read())
 
-def process_sensor_ranges(file_input='stateInputLogic_test.json'):
+def process_sensor_ranges(file_input):
     sensor_details = read_json(file_input)
     temp = {}
 
@@ -106,22 +106,13 @@ def process_sensor_ranges(file_input='stateInputLogic_test.json'):
             if key2 in value1['sensors']:
                 value1['range'] = value2
 
-def setup(data):
+def setup(plot_file, sensor_file, data):
     global plot_details, trend_plot, line_plot
-    plot_details = read_json('plot_details.json')
-    process_sensor_ranges()
+    plot_details = read_json(plot_file)
+    process_sensor_ranges(sensor_file)
 
     trend_plot = TrendPlot(plot_details, data)
     line_plot = LinePlot(plot_details, data)
 
 def graph():
     drawnow.drawnow(all_plots)
-
-'''
-while(True):
-    plot_start = time.time()
-    drawnow(all_plots)
-    plot_end = time.time()
-    print('plot: %.5f' % (plot_end - plot_start))
-    #time.sleep(1)
-'''
