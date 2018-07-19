@@ -15,87 +15,75 @@
 				},
 				{
 					"scissor_mechanism_open": 1
-
 				},
 				{
 					"yaw stability_mechanism_open": 1
-
-				},
-				{
-					"friction_brakes_engaged": 1
-
 				},
 				{
 					"battery_A_voltage_out_of_range" : 1
-
 				},
 				{
 					"battery_A_current_out_of_range" : 1
-
 				},
 				{
 					"battery_A_temperature_out_of_range" : 1
-
 				},
 				{
 					"battery_C_voltage_out_of_range" : 1
-
 				},
 				{
 					"battery_C_current_out_of_range" : 1
-
 				},
 				{
 					"battery_C_temperature_out_of_range" : 1
-
 				},
 				{
 					"scissor_piston_A_temperature_out_of_range" : 1
-
 				},
 				{
 					"scissor_piston_B_temperature_out_of_range" : 1
-
 				},
 				{
 					"scissor_piston_C_temperature_out_of_range" : 1
-
 				},
 				{
 					"scissor_piston_D_temperature_out_of_range" : 1
-
 				},
 				{
 					"yaw_piston_A_temperature_out_of_range" : 1
-
 				},
 				{
 					"yaw_piston_B_temperature_out_of_range" : 1
-
 				},
 				{
 					"yaw_piston_C_temperature_out_of_range" : 1
-
 				},
 				{
 					"yaw_piston_D_temperature_out_of_range" : 1
-
 				},
 				{
 					"brake_piston_A_temperature_out_of_range" : 1
-
 				},
 				{
 					"brake_piston_B_temperature_out_of_range" : 1
-
 				},
 				{
 					"brake_piston_C_temperature_out_of_range" : 1
-
 				},
 				{
 					"brake_piston_D_temperature_out_of_range" : 1
-
+				},
+				{
+					"hover_engine_A_temperature_out_of_range" : 1
+				},
+				{
+					"hover_engine_B_temperature_out_of_range" : 1
+				},
+				{
+					"hover_engine_C_temperature_out_of_range" : 1
+				},
+				{
+					"hover_engine_D_temperature_out_of_range" : 1
 				},
 
 			]
@@ -135,7 +123,21 @@
 					"forward_braking_point_reached" : 1
 				}
 			]
-	]
+	],
+		[13,
+			[
+				{
+					"expected_travel_time_exceeded_state_4" : 1
+				},
+				{
+					"forward_acceleration_negative" : 1
+				},
+				{
+					"friction_brakes_engaged" : 1
+					"remove_brake_time_exceeded_state_4" : 1
+				}
+			]
+		]
 	],
 	"5" : [
 		[ 7,
@@ -144,7 +146,19 @@
 					"pod_completely_stopped" : 1
 				}
 			]
-		]
+		],
+		[13,
+			[
+				{
+					"expected_travel_time_exceeded_state_5" : 1
+				},
+				{
+					"forward_acceleration_positive" : 1
+				},
+				{
+					"friction_brakes_engaged": 1
+				}
+			]]
 	],
 	"7" : [
 		[ 8,
@@ -153,7 +167,19 @@
 					"backward_braking_point_reached" : 1
 				}
 			]
-		]
+		],
+		[13,
+			[
+				{
+					"expected_travel_time_exceeded_state_7" : 1
+				},
+				{
+					"backward_acceleration_negative" : 1
+				},
+				{
+					"friction_brakes_engaged": 1
+				}
+			]]
 	],
 	"8" : [
 		[ 9,
@@ -162,16 +188,28 @@
 					"pod_completely_stopped" : 1
 				}
 			]
-		]
+		],
+		[13,
+			[
+				{
+					"expected_travel_time_exceeded_state_8" : 1
+				},
+				{
+					"backward_acceleration_positive" : 1
+				},
+				{
+					"friction_brakes_engaged": 1
+				}
+			]]
 	],
 	"9" : [
 		[ 17,
 			[
 				{
-					"pod_completely_stopped" : 1
+					"expected_time_exceeded_state_9" : 1
 				}
 			]
-		]
+		],
 	],
 	"13" : [
 		[ 17,
