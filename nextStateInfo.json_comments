@@ -15,44 +15,71 @@
 					"test2" : 1
 				},
 				{
-					"hover_engine_timeout_state_1" : 1
-				}
-				/*{
-					"battery_A_current" : 1
+					"control_station_enter_emergency_mode" : 1
 				},
 				{
-					"battery_B_current" : 1
+					"scissor_mechanism_open": 1					/* yet to be implemented */
 				},
 				{
-					"battery_C_current" : 1
+					"yaw stability_mechanism_open": 1					/* yet to be implemented */
 				},
 				{
-					"battery_D_current" : 1
+					"friction_brakes_engaged": 1					/* yet to be implemented */
 				},
 				{
-					"battery_A_temp" : 1
+					"battery_A_voltage_out_of_range" : 1					/* yet to be implemented */
 				},
 				{
-					"battery_B_temp" : 1
+					"battery_A_current_out_of_range" : 1					/* yet to be implemented */
 				},
 				{
-					"battery_C_temp" : 1
+					"battery_A_temperature_out_of_range" : 1					/* yet to be implemented */
 				},
 				{
-					"battery_D_temp" : 1
+					"battery_C_voltage_out_of_range" : 1					/* yet to be implemented */
 				},
 				{
-					"battery_A_voltage" : 1
+					"battery_C_current_out_of_range" : 1					/* yet to be implemented */
 				},
 				{
-					"battery_B_voltage" : 1
+					"battery_C_temperature_out_of_range" : 1					/* yet to be implemented */
 				},
 				{
-					"battery_C_voltage" : 1
+					"scissor_piston_A_temperature_out_of_range" : 1					/* yet to be implemented */
 				},
 				{
-					"battery_D_voltage" : 1
-				},*/
+					"scissor_piston_B_temperature_out_of_range" : 1					/* yet to be implemented */
+				},
+				{
+					"scissor_piston_C_temperature_out_of_range" : 1					/* yet to be implemented */
+				},
+				{
+					"scissor_piston_D_temperature_out_of_range" : 1					/* yet to be implemented */
+				},
+				{
+					"yaw_piston_A_temperature_out_of_range" : 1					/* yet to be implemented */
+				},
+				{
+					"yaw_piston_B_temperature_out_of_range" : 1				/* yet to be implemented */
+				},
+				{
+					"yaw_piston_C_temperature_out_of_range" : 1					/* yet to be implemented */
+				},
+				{
+					"yaw_piston_D_temperature_out_of_range" : 1					/* yet to be implemented */
+				},
+				{
+					"brake_piston_A_temperature_out_of_range" : 1					/* yet to be implemented */
+				},
+				{
+					"brake_piston_B_temperature_out_of_range" : 1					/* yet to be implemented */
+				},
+				{
+					"brake_piston_C_temperature_out_of_range" : 1					/* yet to be implemented */
+				},
+				{
+					"brake_piston_D_temperature_out_of_range" : 1					/* yet to be implemented */
+				},
 				/*{
 					"hub_A_rpm" : 1
 				},
@@ -114,6 +141,14 @@
 			[
 				{
 					"manual_enter_state_4_accel_forward" : 1 /* needs implemented */
+				}
+			]
+		],
+		[13,
+			[
+				{
+					"hover_engine_stationary_too_long" : 1 /* pod has remained stationary for too long while hover engines are running
+					is this a duplicate of "hover_engine_timeout_state_1" : 1 in "all" */
 				}
 			]
 		]

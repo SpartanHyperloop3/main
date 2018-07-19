@@ -27,17 +27,7 @@ template:
                     "params": null,
                     "raw_data_units": "bool",
 					"type_of_logic": "boolean"
-                },
-                "PI_1_U1_CH1": {
-
-                    "params": [
-                        0.0,
-                        1.0
-                    ],
-					"type_of_logic": "range",
-                    "raw_data_units": "volts"
                 }
-
             }
         }
     ],
@@ -56,14 +46,14 @@ template:
             }
         }
     ],
-    "hover_engine_timeout_state_1": [
+    "hover_engine_stationary_too_long": [
         0,
         {
             "raw_data_names": {
-                "state_1_curr_time": {
+                "state_3_curr_time": {
                     "params": [
-                        "state_1_start_time",
-                        10
+                        "state_3_start_time",
+                        10 /* need to adjust this for the appropriate time length */
                     ],
 					"type_of_logic": "time_diff",
                     "raw_data_units": "s"
@@ -534,7 +524,8 @@ template:
 			"typeOfLogic": "boolean_XOR"
 		}
 	] */
-  "first_braking_point_reached" : [
+    /* incomplete:
+  "forward_braking_point_reached" : [
         0,
         {
                 "raw_data_names" : {
@@ -544,5 +535,5 @@ template:
         }
                 "typeOfLogic" : "time_diff" or "boolean" or "range"
         }
-]
+] */
 }
