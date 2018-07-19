@@ -80,6 +80,18 @@
 				{
 					"brake_piston_D_temperature_out_of_range" : 1					/* yet to be implemented */
 				},
+				{
+					"hover_engine_A_temperature_out_of_range" : 1 /* yet to be implemented */
+				},
+				{
+					"hover_engine_B_temperature_out_of_range" : 1 /* yet to be implemented */
+				},
+				{
+					"hover_engine_C_temperature_out_of_range" : 1 /* yet to be implemented */
+				},
+				{
+					"hover_engine_D_temperature_out_of_range" : 1 /* yet to be implemented */
+				},
 				/*{
 					"hub_A_rpm" : 1
 				},
@@ -157,10 +169,20 @@
 		[ 5, /* first braking point reached */
 			[
 				{
-					"forward_braking_point_reached" : 1
+					"forward_braking_point_reached" : 1 /* yet to be implemented */
 				}
 			]
-	]
+	],
+		[13,
+			[
+				{
+					"expected_travel_time_exceeded_state_4" : 1 /* yet to be implemented */
+				},
+				{
+					""
+				}
+			]
+		]
 	],
 	"5" : [
 		[ 7,
