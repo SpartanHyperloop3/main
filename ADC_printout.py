@@ -46,7 +46,8 @@ import smbus
 import time
 
 device_address = 0x6b
-read_register = 48
+ADC_channel = 1 #1-4
+read_register = ((ADC_channel-1) << 4) + 16
 
 bus = smbus.SMBus(1)
 bus.pec = True
