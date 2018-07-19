@@ -8,7 +8,7 @@ import tkMessageBox
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
-socket.bind('tcp://127.0.0.1:5010')     #enter master ip, port 5010
+socket.bind('tcp://*:5000')     #enter master ip, port 5010
 
 Value = 1
 
@@ -53,9 +53,6 @@ def State99():
         socket.send_json(["Emergency_Override", Value, time])
     else:
         print("You cancelled emergency override")
-
-
-
 
 window = Tk.Tk()
 window.title("Control station")
