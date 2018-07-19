@@ -45,7 +45,7 @@ print(pressure_sensor.read())
 import smbus
 import time
 
-device_address = 0x6b
+device_address = 0x6c
 ADC_channel = 1 #1-4
 read_register = ((ADC_channel-1) << 4) + 16
 
