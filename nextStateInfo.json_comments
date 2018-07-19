@@ -24,9 +24,6 @@
 					"yaw stability_mechanism_open": 1					/* yet to be implemented */
 				},
 				{
-					"friction_brakes_engaged": 1					/* yet to be implemented */
-				},
-				{
 					"battery_A_voltage_out_of_range" : 1					/* yet to be implemented */
 				},
 				{
@@ -179,7 +176,11 @@
 					"expected_travel_time_exceeded_state_4" : 1 /* yet to be implemented */
 				},
 				{
-					""
+					"forward_acceleration_negative" : 1
+				},
+				{
+					"friction_brakes_engaged" : 1					/* yet to be implemented */
+					"remove_brake_time_exceeded_state_4" : 1
 				}
 			]
 		]
@@ -191,7 +192,19 @@
 					"pod_completely_stopped" : 1 /* needs implemented */
 				}
 			]
-		]
+		],
+		[13,
+			[
+				{
+					"expected_travel_time_exceeded_state_5" : 1 /* yet to be implemented */
+				},
+				{
+					"forward_acceleration_positive" : 1 /* yet to be implemented */
+				},
+				{
+					"friction_brakes_engaged": 1					/* yet to be implemented */
+				}
+			]]
 	],
 	"7" : [
 		[ 8,
@@ -200,7 +213,19 @@
 					"backward_braking_point_reached" : 1 /* needs implemented */
 				}
 			]
-		]
+		],
+		[13,
+			[
+				{
+					"expected_travel_time_exceeded_state_7" : 1 /* yet to be implemented */
+				},
+				{
+					"backward_acceleration_negative" : 1 /* yet to be implemented */
+				},
+				{
+					"friction_brakes_engaged": 1					/* yet to be implemented */
+				}
+			]]
 	],
 	"8" : [
 		[ 9,
@@ -209,16 +234,28 @@
 					"pod_completely_stopped" : 1 /* needs implemented */
 				}
 			]
-		]
+		],
+		[13,
+			[
+				{
+					"expected_travel_time_exceeded_state_8" : 1 /* yet to be implemented */
+				},
+				{
+					"backward_acceleration_positive" : 1 /* yet to be implemented */
+				},
+				{
+					"friction_brakes_engaged": 1					/* yet to be implemented */
+				}
+			]]
 	],
 	"9" : [
 		[ 17,
 			[
 				{
-					"pod_completely_stopped" : 1 /* needs implemented */
+					"expected_time_exceeded_state_9" : 1 /* needs implemented */
 				}
 			]
-		]
+		],
 	],
 	"13" : [
 		[ 17, /* for manually leaving the emergency state if set */
