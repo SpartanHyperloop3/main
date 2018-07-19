@@ -15,32 +15,32 @@ print("Serial port start")
 ## Open the USB serial ports
 serial_port0 = Serial("/dev/ttyACM0")
 serial_port1 = Serial("/dev/ttyACM1")
-##serial_port2 = Serial("/dev/ttyACM2")
-##serial_port3 = Serial("/dev/ttyACM3")
+serial_port2 = Serial("/dev/ttyACM2")
+serial_port3 = Serial("/dev/ttyACM3")
 
 print('Serial port initialized.')
 ## Create a Bus instance using the open serial port
 bus0 = TMCL.connect(serial_port0)
 bus1 = TMCL.connect(serial_port1)
-##bus2 = TMCL.connect(serial_port2)
-##bus3 = TMCL.connect(serial_port3)
+bus2 = TMCL.connect(serial_port2)
+bus3 = TMCL.connect(serial_port3)
 
 ## Get the motors
 mod0 = bus0.get_module(MODULE_ADDRESS)
 mod1 = bus1.get_module(MODULE_ADDRESS)
-##mod2 = bus2.get_module(MODULE_ADDRESS)
-##mod3 = bus3.get_module(MODULE_ADDRESS)
+mod2 = bus2.get_module(MODULE_ADDRESS)
+mod3 = bus3.get_module(MODULE_ADDRESS)
 
 motor0 = mod0.get_motor(0)
 motor1 = mod1.get_motor(0)
-##motor2 = mod2.get_motor()
-##motor3 = mod3.get_motor()
+motor2 = mod2.get_motor(0)
+motor3 = mod3.get_motor(0)
 
 ## Restart/Reinitialize the Trinamic Module Timers
 motor0.send(5,31,0,0)
 motor1.send(5,31,0,0)
-##motor2.send(5,31,0,0)
-##motor3.send(5,31,0,0)
+motor2.send(5,31,0,0)
+motor3.send(5,31,0,0)
 
 
 def motor0Param():
@@ -56,13 +56,13 @@ def motor0Param():
     motor0.send(5, 253, 0, 20)
 
     ##set start current [1mA] (peak)
-    motor0.send(5, 177, 0, 1000)
+    motor0.send(5, 177, 0, 3000)
 
     ##set max current [6250mA] (peak)
     motor0.send(5, 6, 0, 6250)
 
     ##set max velocity [1700rpm]
-    motor0.send(5, 4, 0, 1700)
+    motor0.send(5, 4, 0, 2000)
 
     ##set acceleration [500rpm/s]
     motor0.send(5, 11, 0, 500)
@@ -101,13 +101,13 @@ def motor1Param():
     motor1.send(5, 253, 0, 20)
 
     ##set start current [1mA] (peak)
-    motor1.send(5, 177, 0, 1000)
+    motor1.send(5, 177, 0, 3000)
 
     ##set max current [6250mA] (peak)
     motor1.send(5, 6, 0, 6250)
 
     ##set max velocity [1700rpm]
-    motor1.send(5, 4, 0, 1700)
+    motor1.send(5, 4, 0, 2000)
 
     ##set acceleration [500rpm/s]
     motor1.send(5, 11, 0, 500)
@@ -146,13 +146,13 @@ def motor2Param():
     motor2.send(5, 253, 0, 20)
 
     ##set start current [1mA] (peak)
-    motor2.send(5, 177, 0, 1000)
+    motor2.send(5, 177, 0, 3000)
 
     ##set max current [6250mA] (peak)
     motor2.send(5, 6, 0, 6250)
 
     ##set max velocity [1700rpm]
-    motor2.send(5, 4, 0, 1700)
+    motor2.send(5, 4, 0, 2000)
 
     ##set acceleration [500rpm/s]
     motor2.send(5, 11, 0, 500)
@@ -173,10 +173,10 @@ def motor2Param():
     motor2.send(5, 230, 0, 300)
 
     ##set thermal winding time constant [ms]    
-    motor2.send(5, 25, 0, 300)
+    ##motor2.send(5, 25, 0, 300)
 
     ##set IIT counter limit
-    motor2.send(5, 26, 0, 300)
+    ##motor2.send(5, 26, 0, 300)
     
 def motor3Param():
     ## TMCL-IDE Commands
@@ -191,13 +191,13 @@ def motor3Param():
     motor3.send(5, 253, 0, 20)
 
     ##set start current [1mA] (peak)
-    motor3.send(5, 177, 0, 1000)
+    motor3.send(5, 177, 0, 3000)
 
     ##set max current [6250mA] (peak)
     motor3.send(5, 6, 0, 6250)
 
     ##set max velocity [1700rpm]
-    motor3.send(5, 4, 0, 1700)
+    motor3.send(5, 4, 0, 2000)
 
     ##set acceleration [500rpm/s]
     motor3.send(5, 11, 0, 500)
@@ -218,12 +218,23 @@ def motor3Param():
     motor3.send(5, 230, 0, 300)
 
     ##set thermal winding time constant [ms]    
-    motor3.send(5, 25, 0, 300)
+    ##motor3.send(5, 25, 0, 300)
 
     ##set IIT counter limit
-    motor3.send(5, 26, 0, 300)
+    ##motor3.send(5, 26, 0, 300)
     
+def fwdtest():
+    motor0.send(1,0,0,500) ##rotate right 500rpm
+    motor1.send(1,0,0,500) ##rotate right 500rpm
+    motor2.send(1,0,0,-500)
+    motor3.send(1,0,0,-500)
 
+def revtest():
+    motor0.send(1,0,0,-500) ##rotate right 500rpm
+    motor1.send(1,0,0,-500) ##rotate right 500rpm
+    motor2.send(1,0,0,500)
+    motor3.send(1,0,0,500)
+    
 def fwd():
     ##set actual position
     print("Actual Position Set to 0.")
@@ -248,14 +259,14 @@ def fwd():
     motor0.send(5, 0, 0, 5730)
     print("Motor 0 Target Position: %s" % (motor0.send(6,0,0,0).value))
     motor1.send(5, 0, 0, 5730)
-    print("Motor 0 Target Position: %s" % (motor1.send(6,0,0,0).value))
-    motor2.send(5, 0, 0, 5730)
+    print("Motor 1 Target Position: %s" % (motor1.send(6,0,0,0).value))
+    motor2.send(5, 0, 0, -5730)
     print("Motor 2 Target Position: %s" % (motor2.send(6,0,0,0).value))
-    motor3.send(5, 0, 0, 5730)
+    motor3.send(5, 0, 0, -5730)
     print("Motor 3 Target Position: %s" % (motor3.send(6,0,0,0).value))
 
      ##WAIT FOR EVENT CODE NEEDED -- placeholder for now
-    time.sleep(5)
+    ##time.sleep(8)
     
 def rev():
     ##set target position
@@ -266,7 +277,15 @@ def rev():
     motor3.send(5, 0, 0, 0)
 
     ##WAIT FOR EVENT CODE NEEDED --placeholder for now
-    time.sleep(5)
+    i = 0
+    while i < 60:
+        readMotor0RPM()
+        readMotor1RPM()
+        readMotor2RPM()
+        readMotor3RPM()
+
+        time.sleep(0.1)
+        i = i + 1
     
     ##disable velocity ramp
     print("Disabling velocity ramp...")
