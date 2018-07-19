@@ -1,8 +1,9 @@
 import smbus
 import time
 
-device_address = 0x6a
-read_register = 48
+device_address = 0x69
+ADC_channel = 1 #1-4
+read_register = ((ADC_channel-1) << 4) + 16
 
 bus = smbus.SMBus(1)
 bus.pec = True
@@ -64,18 +65,21 @@ def convert():
     upper = (upper << 8)
     total = upper + reading[1]
     voltage = float(total * .001)
-    voltageDivider = 6.8 / (6.8 + 10)
-    return voltage / voltageDivider
+    voltage_divider = (6.8 + 10) / 6.8
+    return voltage * voltage_divider
 
 
 # Let sensor be a list of 2 values: minSens, maxSens
 def map(sensor, reading):
     zeroReading = reading - sensor[0]  # zero out the reading
+    print(zeroReading)
     if (zeroReading <= 0):
         return 0  # why? It's out of range, unreliable value.
     else:
         mapValue = reading / 4.444015
+        print(mapValue)
         result = mapValue * 5000  # 5000mm max range
+        print(result)
         # 4.444015 seems to be like the max value, past 5000mm
 
         # Comment this out if you need to operate past 1m range.
