@@ -318,7 +318,7 @@
             "raw_data_names" : {
                 "PI_A_temp_hover_1" : {
                     "digital" : 1,
-                    "params" : [], /* need to adjust, get details from Thomas or Amena */
+                    "params" : [15,64],
                     "raw_data_units": "celcius",
                     "typeOfLogic" : "range"
                 }
@@ -331,7 +331,7 @@
             "raw_data_names" : {
                 "PI_A_temp_hover_2" : {
                     "digital" : 1,
-                    "params" : [], /* need to adjust, get details from Thomas or Amena */
+                    "params" : [15,64],
                     "raw_data_units": "celcius",
                     "typeOfLogic" : "range"
                 }
@@ -344,7 +344,7 @@
             "raw_data_names" : {
                 "PI_D_temp_hover_3" : {
                     "digital" : 1,
-                    "params" : [], /* need to adjust, get details from Thomas or Amena */
+                    "params" : [15, 64],
                     "raw_data_units": "celcius",
                     "typeOfLogic" : "range"
                 }
@@ -357,7 +357,7 @@
             "raw_data_names" : {
                 "PI_D_temp_hover_4" : {
                     "digital" : 1,
-                    "params" : [], /* need to adjust, get details from Thomas or Amena */
+                    "params" : [15, 64],
                     "raw_data_units" : "celcius",
                     "typeOfLogic" : "range"
                 }

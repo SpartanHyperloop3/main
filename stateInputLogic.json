@@ -92,7 +92,7 @@
             "raw_data_names" : {
                 "PI_A_temp_bms_1" : {
                     "digital" : 0,
-                    "params" : [15, 70],
+                    "params" : [15, 65],
                     "raw_data_units" : "celcius",
                     "typeOfLogic" : "range"
                 }
@@ -131,7 +131,7 @@
             "raw_data_names" : {
                 "PI_D_temp_bms_2" : {
                     "digital" : 0,
-                    "params" : [15, 70],
+                    "params" : [15, 65],
                     "raw_data_units" : "celcius",
                     "typeOfLogic" : "range"
                 }
@@ -300,7 +300,7 @@
             "raw_data_names" : {
                 "PI_A_temp_hover_1" : {
                     "digital" : 1,
-                    "params" : [],
+                    "params" : [15,64],
                     "raw_data_units": "celcius",
                     "typeOfLogic" : "range"
                 }
@@ -313,7 +313,7 @@
             "raw_data_names" : {
                 "PI_A_temp_hover_2" : {
                     "digital" : 1,
-                    "params" : [],
+                    "params" : [15,64],
                     "raw_data_units": "celcius",
                     "typeOfLogic" : "range"
                 }
@@ -326,7 +326,7 @@
             "raw_data_names" : {
                 "PI_D_temp_hover_3" : {
                     "digital" : 1,
-                    "params" : [],
+                    "params" : [15, 64],
                     "raw_data_units": "celcius",
                     "typeOfLogic" : "range"
                 }
@@ -339,7 +339,7 @@
             "raw_data_names" : {
                 "PI_D_temp_hover_4" : {
                     "digital" : 1,
-                    "params" : [],
+                    "params" : [15, 64],
                     "raw_data_units" : "celcius",
                     "typeOfLogic" : "range"
                 }
