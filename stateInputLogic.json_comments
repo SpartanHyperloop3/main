@@ -2,22 +2,7 @@
 
 \/\*(\*(?!\/)|[^*])*\*\/
 
-*/
-/*
-template:
-"State_Variable" : [
-        0,
-        {
-                "raw_data_names" : {
-                    "sensor_name_from_slave_pi_json" : {
-                        "params" : ["state_'state number'_start_time", 10] or null or [0.0, 1.0]
-        }
-        }
-                "typeOfLogic" : "time_diff" or "boolean" or "range"
-        }
-],
-*/
-{
+*/{
     "Emergency_Override": [
         0,
         {
@@ -326,382 +311,60 @@ template:
                 }
             }
         }
-    ]
-    /*"battery_A_current": [
+    ],
+    "hover_engine_A_temperature_out_of_range" : [
         0,
         {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0.0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
+            "raw_data_names" : {
+                "PI_A_temp_hover_1" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Thomas or Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
                 }
             }
         }
     ],
-    "battery_A_temp": [
+    "hover_engine_B_temperature_out_of_range" : [
         0,
         {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
+            "raw_data_names" : {
+                "PI_A_temp_hover_2" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Thomas or Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
                 }
             }
         }
     ],
-    "battery_A_voltage": [
+    "hover_engine_C_temperature_out_of_range" : [
         0,
         {
-            "raw_data_names": {
-                "PI_1_U1_CH3": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
+            "raw_data_names" : {
+                "PI_D_temp_hover_3" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Thomas or Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
                 }
             }
         }
     ],
-    "battery_B_current": [
+    "hover_engine_D_temperature_out_of_range" : [
         0,
         {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0.0,
-                        1.9
-                    ],
-                    "raw_data_units": "volts"
+            "raw_data_names" : {
+                "PI_D_temp_hover_4" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Thomas or Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
                 }
             }
         }
     ],
-    "battery_B_temp": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
 
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "battery_B_voltage": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "battery_C_current": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH3": {
-
-                    "params": [
-                        0.0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "battery_C_temp": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "battery_C_voltage": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "battery_D_current": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "battery_D_temp": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "battery_D_voltage": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hover_A_rpm": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_A_current": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_A_rpm": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_A_voltage": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_B_current": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_B_rpm": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_B_voltage": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_C_current": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_C_rpm": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_C_voltage": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_D_current": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_D_rpm": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
-    "hub_D_voltage": [
-        0,
-        {
-            "raw_data_names": {
-                "PI_1_U1_CH4": {
-
-                    "params": [
-                        0,
-                        1.0
-                    ],
-                    "raw_data_units": "volts"
-                }
-            }
-        }
-    ],
     "manual_enter_emergency_state": [
         0,
         {

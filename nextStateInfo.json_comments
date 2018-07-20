@@ -18,10 +18,10 @@
 					"control_station_enter_emergency_mode" : 1
 				},
 				{
-					"scissor_mechanism_open": 1					/* yet to be implemented */
+					"scissor_mechanism_open": 1	/* yet to be implemented. Do we need this logic since we don't have sensors for this?*/
 				},
 				{
-					"yaw stability_mechanism_open": 1					/* yet to be implemented */
+					"yaw stability_mechanism_open": 1 /* yet to be implemented. Do we need this logic since we don't have sensors for this?*/
 				},
 				{
 					"battery_A_voltage_out_of_range" : 1
@@ -78,16 +78,16 @@
 					"brake_piston_D_temperature_out_of_range" : 1
 				},
 				{
-					"hover_engine_A_temperature_out_of_range" : 1 /* yet to be implemented */
+					"hover_engine_A_temperature_out_of_range" : 1
 				},
 				{
-					"hover_engine_B_temperature_out_of_range" : 1 /* yet to be implemented */
+					"hover_engine_B_temperature_out_of_range" : 1
 				},
 				{
-					"hover_engine_C_temperature_out_of_range" : 1 /* yet to be implemented */
+					"hover_engine_C_temperature_out_of_range" : 1
 				},
 				{
-					"hover_engine_D_temperature_out_of_range" : 1 /* yet to be implemented */
+					"hover_engine_D_temperature_out_of_range" : 1
 				},
 				/*{
 					"hub_A_rpm" : 1
