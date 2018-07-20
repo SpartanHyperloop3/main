@@ -358,13 +358,64 @@
                 "PI_D_temp_hover_4" : {
                     "digital" : 1,
                     "params" : [], /* need to adjust, get details from Thomas or Amena */
-                    "raw_data_units": "celcius",
+                    "raw_data_units" : "celcius",
                     "typeOfLogic" : "range"
                 }
             }
         }
     ],
-
+    "prox_A_hovering" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_A_proximity_1" : {
+                    "digital" : 0,
+                    "params" : [3,15], /* need to adjust after on pod testing */
+                    "raw_data_units" : "millimeters",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "prox_B_hovering" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_A_proximity_2" : {
+                    "digital" : 0,
+                    "params" : [3,15], /* need to adjust after on pod testing */
+                    "raw_data_units" : "millimeters",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "prox_C_hovering" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_D_proximity_3" : {
+                    "digital" : 0,
+                    "params" : [3,15], /* need to adjust after on pod testing */
+                    "raw_data_units" : "millimeters",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "prox_D_hovering" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_D_proximity_4" : {
+                    "digital" : 0,
+                    "params" : [3,15], /* need to adjust after on pod testing */
+                    "raw_data_units" : "millimeters",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
     "manual_enter_emergency_state": [
         0,
         {
@@ -420,7 +471,7 @@
 			},
 			"typeOfLogic": "boolean_XOR"
 		}
-	] */
+	]
     /* incomplete:
   "forward_braking_point_reached" : [
         0,
