@@ -31,7 +31,7 @@ template:
             }
         }
     ],
-    "Emergency_Timeout": [
+    /*"Emergency_Timeout": [
         0,
         {
             "raw_data_names": {
@@ -45,7 +45,7 @@ template:
                 }
             }
         }
-    ],
+    ],*/
     "hover_engine_stationary_too_long": [
         0,
         {
@@ -89,6 +89,19 @@ template:
                     ],
 					"type_of_logic": "range",
                     "raw_data_units": "volts"
+                }
+            }
+        }
+    ],
+    "battery_A_voltage_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_A_voltage_1" : {
+                    "digital" : 0,
+                    "params" : [40, 65], /* needs adjusted to the appropriate value */
+                    "raw_data_units" : "volts",
+                    "typeOfLogic" : "range"
                 }
             }
         }
