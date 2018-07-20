@@ -34,7 +34,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "proxRead",
                                    "args" : []
                                             },
                                "pec" : 0,
@@ -52,7 +52,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "proxRead",
                                    "args" : []
                                },
                                "pec" : 0,
@@ -69,7 +69,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "BMSvoltage",
                                    "args" : []
                                },
                                "pec" : 0,
@@ -93,7 +93,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "proxRead",
                                    "args" : []
                                },
                                "pec" : 0,
@@ -110,7 +110,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "proxRead",
                                    "args" : []
                                },
                                "pec" : 0,
@@ -133,7 +133,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "BMSvoltage",
                                    "args" : []
                                },
                                "pec" : 0,
@@ -156,7 +156,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "batteryCurrent",
                                    "args" : []
                                },
                                "pec" : 0,
@@ -179,7 +179,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "pressureSen",
                                    "args" : []
                                },
                                "pec" : 0,
@@ -201,7 +201,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "convertIRtemp",
                                    "args" : []
                                },
                                "pec" : 0,
@@ -217,7 +217,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -233,7 +233,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -249,7 +249,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -265,7 +265,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -281,7 +281,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -304,7 +304,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -320,7 +320,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -336,7 +336,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -352,7 +352,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -368,7 +368,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -384,7 +384,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "convertIRtemp",
                 "args": []
             },
             "pec": 0,
@@ -406,8 +406,8 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "thermistor100k",
-                "args": [10000]
+                "function": "thermistor10k",
+                "args": [8000]
             },
             "pec": 0,
             "manual_cmd": 1
@@ -466,7 +466,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "proxRead",
                 "args": []
             },
             "pec": 0,
@@ -483,7 +483,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "proxRead",
                 "args": []
             },
             "pec": 0,
@@ -506,7 +506,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "BMSvoltage",
                                    "args" : []
                                },
                                "pec" : 0,
@@ -529,7 +529,7 @@ def oksensor():
                                "data_length" : "block",
                                "data_type" : "pos",
                                "callback" : {
-                                   "function" : "ADCtoVolts12Bit",
+                                   "function" : "batteryCurrent",
                                    "args" : []
                                },
                                "pec" : 0,
