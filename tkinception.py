@@ -9,10 +9,7 @@ import json
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
-socket.bind('tcp://*:5020')         #broadcast at 5020
-
-socket_r = context.socket(zmq.SUB)
-socket_r.bind('tcp://*:5010')       #receive at 5010
+socket.bind('tcp://192.168.0.123:5020')         #broadcast at 5020
 
 Value = 1
 
@@ -79,6 +76,7 @@ def oksensor():
                                "manual_cmd" : 1
 
                                     }])
+        import readdata
 
     elif varpi.get() == "PI A" and varsensor.get() == "Levitation":
         print("Reading PI A proximity sensor ")
@@ -107,7 +105,7 @@ def oksensor():
                                "operations" : "R",
                                "address" : 105,
                                "write" : [],
-                               "read" : [64],
+                               "read" : [80],
                                "sensor_name" : "PI_A_proximity_2",
                                "data_length" : "block",
                                "data_type" : "pos",
@@ -118,6 +116,7 @@ def oksensor():
                                "pec" : 0,
                                "manual_cmd" : 1
                         }])
+        import readdata
 
     elif varpi.get() == "PI A" and varsensor.get() == "Voltage":
         print("Reading PI A proximity sensor ")
@@ -140,6 +139,7 @@ def oksensor():
                                "pec" : 0,
                                "manual_cmd" : 1
                         }])
+        import readdata
 
     elif varpi.get() == "PI A" and varsensor.get() == "Current":
         print("Reading PI A proximity sensor ")
@@ -162,6 +162,7 @@ def oksensor():
                                "pec" : 0,
                                "manual_cmd" : 1
                         }])
+        import readdata
 
     elif varpi.get() == "PI B" and varsensor.get() == "Pressure":
         print("Reading PI B pressure ")
@@ -184,6 +185,7 @@ def oksensor():
                                "pec" : 0,
                                "manual_cmd" : 1
                         }])
+        import readdata
     elif varpi.get() == "PI B" and varsensor.get() == "Temperature":
         print("Reading PI B scissor temperature ")
         timenow = datetime.datetime.now()
@@ -285,6 +287,7 @@ def oksensor():
             "pec": 0,
             "manual_cmd": 1
         }])
+        import readdata
 
     elif varpi.get() == "PI C" and varsensor.get() == "Temperature":
         print("Reading PI C scissor temperature ")
@@ -387,11 +390,30 @@ def oksensor():
             "pec": 0,
             "manual_cmd": 1
         }])
+        import readdata
     elif varpi.get() == "PI D" and varsensor.get() == "Temperature":
         print("Reading PI D Hover temperature ")
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
+        socket.send_json(["PI_D", "i2c", {
+            "bus": "i2c",
+            "operations": "R",
+            "address": 105,
+            "write": [],
+            "read": [16],
+            "sensor_name": "PI_D_temp_bms_2",
+            "data_length": "block",
+            "data_type": "pos",
+            "callback": {
+                "function": "thermistor100k",
+                "args": [10000]
+            },
+            "pec": 0,
+            "manual_cmd": 1
+
+        }])
+
         socket.send_json(["PI_D", "i2c", {
             "bus": "i2c",
             "operations": "R",
@@ -402,7 +424,7 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "proxRead",
                 "args": []
             },
             "pec": 0,
@@ -420,30 +442,14 @@ def oksensor():
             "data_length": "block",
             "data_type": "pos",
             "callback": {
-                "function": "ADCtoVolts12Bit",
+                "function": "proxRead",
                 "args": []
             },
             "pec": 0,
             "manual_cmd": 1
 
         }])
-        socket.send_json(["PI_D", "i2c", {
-            "bus": "i2c",
-            "operations": "R",
-            "address": 105,
-            "write": [],
-            "read": [16],
-            "sensor_name": "PI_D_temp_bms_2",
-            "data_length": "block",
-            "data_type": "pos",
-            "callback": {
-                "function": "ADCtoVolts12Bit",
-                "args": []
-            },
-            "pec": 0,
-            "manual_cmd": 1
-
-        }])
+        import readdata
 
     elif varpi.get() == "PI D" and varsensor.get() == "Levitation":
         print("Reading PI D proximity sensor ")
@@ -472,7 +478,7 @@ def oksensor():
             "operations": "R",
             "address": 105,
             "write": [],
-            "read": [64],
+            "read": [80],
             "sensor_name": "PI_D_proximity_4",
             "data_length": "block",
             "data_type": "pos",
@@ -483,6 +489,7 @@ def oksensor():
             "pec": 0,
             "manual_cmd": 1
         }])
+        import readdata
 
     elif varpi.get() == "PI D" and varsensor.get() == "Voltage":
         print("Reading PI A proximity sensor ")
@@ -505,6 +512,7 @@ def oksensor():
                                "pec" : 0,
                                "manual_cmd" : 1
                         }])
+        import readdata
 
     elif varpi.get() == "PI D" and varsensor.get() == "Current":
         print("Reading PI A proximity sensor ")
@@ -527,6 +535,7 @@ def oksensor():
                                "pec" : 0,
                                "manual_cmd" : 1
                         }])
+        import readdata
 
 
     else:
@@ -537,36 +546,40 @@ def oksensor():
               " PI C: Temperature, Pressure;" \
               " PI D: Temperature, Proximity;"
 
+
+
 def okcmd():
     if varcmd.get() == "Engage brakes":
         print "Sending command to engage brakes"
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
-        socket.send_json(["PI_X", "gpio_write", 8, 1])
-        print ["PI_X", "gpio_write", 8, 1]
+        socket.send_json(["PI_A", "gpio_write", 8, 1])
+        #print ["PI_A", "gpio_write", 8, 1]
+        socket.send_json(["PI_D", "gpio_write", 8, 1])
 
     elif varcmd.get() == "Disengage brakes":
         print "Sending command to disengage brakes"
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
-        socket.send_json(["PI_X", "gpio_write", 8, 0])
+        socket.send_json(["PI_A", "gpio_write", 8, 0])
+        socket.send_json(["PI_D", "gpio_write", 8, 0])
 
-    elif varcmd.get() == "Open scissor":
-        print "Sending command to open scissor mechanism"
+    elif varcmd.get() == "Run in-hub motors forwards":
+        print "Sending command to run in-hub forwards at 500 RPM"
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
-        socket.send_json(["PI_Y", "gpio_write", 10, 0])
+        socket.send_json(["PI_C", "func", "fwdtest", []])
 
-    elif varcmd.get() == "Close scissor":
-        print "Sending command to close scissor"
+    elif varcmd.get() == "Run in-hub motors backwards":
+        print "Sending command to run in-hub backwards at 500 RPM"
         timenow = datetime.datetime.now()
         time = str(timenow)
         print(time)
-        socket.send_json(["PI_Y", "gpio_write", 10, 1])
-
+        socket.send_json(["PI_C", "func", "revtest", 1])
+"""
 def inhubok():
     inhubrpm = int(textboxinhub.get())
     print "Sending inhub motor speed up command at: ", inhubrpm
@@ -574,8 +587,8 @@ def inhubok():
     time = str(timenow)
     print(time)
     socket.send_json(["PI_Z", "pwm_write", inhubrpm])
-    print ["PI_Z", "pwm_write", inhubrpm]
-
+    print ["PI_C", "pwm_write", inhubrpm]
+"""
 def hoverok():
     hoverrpm = int(textboxhover.get())
     print "Sending hover motor speed up command at: ", hoverrpm
@@ -584,18 +597,12 @@ def hoverok():
     print(time)
     socket.send_json(["PI_A", "pwm_write", hoverrpm])
     socket.send_json(["PI_D", "pwm_write", hoverrpm])
-    print ["PI_D", "pwm_write", hoverrpm]
+    #print ["PI_D", "pwm_write", hoverrpm]
+
+
 
 def readdata():
-    time.sleep(3)
-    incoming_json = socket_r.recv_json()
-    data_read = json.load(incoming_json)
-    if data_read != "":
-        w = Label(window, text=data_read)
-        w.pack()
-    else:
-        print "No sensor data found"
-
+    import zmqreecv
 
 
 label_sensor = Tkinter.Label(window, text = "Choose Pi and its corresponding sensor: ", fg = "black", bg="light blue")
@@ -619,29 +626,31 @@ label_cmd.pack()
 
 varcmd = StringVar(window)
 varcmd.set("Choose command")
-option3 = OptionMenu(window, varcmd, "Engage brakes", "Disengage brakes", "Open scissor", "Close scissor")
+option3 = OptionMenu(window, varcmd, "Engage brakes", "Disengage brakes", "Run in-hub motors forwards", "Run in-hub motors backwards")
 option3.pack()
 buttoncommand = Button(window, text="OK", command=okcmd)
 buttoncommand.pack()
-
+"""
 labelinhub = Tkinter.Label(window, text = "Enter in-hub speed in rpm: ")
 textboxinhub = Tkinter.Entry(window, fg = "black", bg = "white")
 inhubrpm = str(textboxinhub.get())
 buttoninhub = Tkinter.Button(window, text = "OK", command = inhubok)
-
+"""
 labelhover = Tkinter.Label(window, text = "Enter hover engine speed in rpm")
 textboxhover = Tkinter.Entry(window, fg = "black", bg = "white")
 hoverrpm = str(textboxhover.get())
 buttonhover = Tkinter.Button(window, text = "OK", command = hoverok)
 labelresult = Tkinter.Button(window, text = " Read data:                  " ,fg = "black", bg = "white", command = readdata)
-
+"""
 labelinhub.pack()
 textboxinhub.pack()
 buttoninhub.pack()
+"""
+
 labelhover.pack()
 textboxhover.pack()
 buttonhover.pack()
-labelresult.pack()
+#labelresult.pack()
 window.mainloop()
 
 
