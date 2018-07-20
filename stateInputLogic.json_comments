@@ -99,13 +99,234 @@ template:
             "raw_data_names" : {
                 "PI_A_voltage_1" : {
                     "digital" : 0,
-                    "params" : [40, 65], /* needs adjusted to the appropriate value */
+                    "params" : [54, 67.2],
                     "raw_data_units" : "volts",
                     "typeOfLogic" : "range"
                 }
             }
         }
     ],
+    "battery_A_current_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_A_current_1" : {
+                    "digital" : 0,
+                    "params" : [0, 0], /* need to adjust this value, check with Thomas and Nick */
+                    "raw_data_units" : "amps",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "battery_A_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_A_temp_bms_1" : {
+                    "digital" : 0,
+                    "params" : [15, 70],
+                    "raw_data_units" : "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "battery_C_voltage_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_D_voltage_2" : {
+                    "digital" : 0,
+                    "params" : [54, 67.2],
+                    "raw_data_units" : "volts",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "battery_C_current_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_D_current_2" : {
+                    "digital" : 0,
+                    "params" : [0, 0], /* need to adjust this value, check with Thomas and Nick */
+                    "raw_data_units" : "amps",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "battery_C_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_D_temp_bms_2" : {
+                    "digital" : 0,
+                    "params" : [15, 70],
+                    "raw_data_units" : "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "scissor_piston_A_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_B_temp_cyl_1" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "scissor_piston_B_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_B_temp_cyl_2" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "scissor_piston_C_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_B_temp_cyl_3" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "scissor_piston_D_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_B_temp_cyl_4" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "yaw_piston_A_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_B_temp_cyl_5" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "yaw_piston_B_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_B_temp_cyl_6" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "yaw_piston_C_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_C_temp_cyl_7" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "yaw_piston_D_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_C_temp_cyl_8" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "brake_piston_A_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_C_temp_cyl_9" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "brake_piston_B_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_C_temp_cyl_10" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "brake_piston_C_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_C_temp_cyl_11" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ],
+    "brake_piston_D_temperature_out_of_range" : [
+        0,
+        {
+            "raw_data_names" : {
+                "PI_C_temp_cyl_12" : {
+                    "digital" : 1,
+                    "params" : [], /* need to adjust, get details from Amena */
+                    "raw_data_units": "celcius",
+                    "typeOfLogic" : "range"
+                }
+            }
+        }
+    ]
     /*"battery_A_current": [
         0,
         {

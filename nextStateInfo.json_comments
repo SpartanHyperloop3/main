@@ -24,58 +24,58 @@
 					"yaw stability_mechanism_open": 1					/* yet to be implemented */
 				},
 				{
-					"battery_A_voltage_out_of_range" : 1					/* yet to be implemented */
+					"battery_A_voltage_out_of_range" : 1
 				},
 				{
-					"battery_A_current_out_of_range" : 1					/* yet to be implemented */
+					"battery_A_current_out_of_range" : 1
 				},
 				{
-					"battery_A_temperature_out_of_range" : 1					/* yet to be implemented */
+					"battery_A_temperature_out_of_range" : 1
 				},
 				{
-					"battery_C_voltage_out_of_range" : 1					/* yet to be implemented */
+					"battery_C_voltage_out_of_range" : 1
 				},
 				{
-					"battery_C_current_out_of_range" : 1					/* yet to be implemented */
+					"battery_C_current_out_of_range" : 1
 				},
 				{
-					"battery_C_temperature_out_of_range" : 1					/* yet to be implemented */
+					"battery_C_temperature_out_of_range" : 1
 				},
 				{
-					"scissor_piston_A_temperature_out_of_range" : 1					/* yet to be implemented */
+					"scissor_piston_A_temperature_out_of_range" : 1
 				},
 				{
-					"scissor_piston_B_temperature_out_of_range" : 1					/* yet to be implemented */
+					"scissor_piston_B_temperature_out_of_range" : 1
 				},
 				{
-					"scissor_piston_C_temperature_out_of_range" : 1					/* yet to be implemented */
+					"scissor_piston_C_temperature_out_of_range" : 1
 				},
 				{
-					"scissor_piston_D_temperature_out_of_range" : 1					/* yet to be implemented */
+					"scissor_piston_D_temperature_out_of_range" : 1
 				},
 				{
-					"yaw_piston_A_temperature_out_of_range" : 1					/* yet to be implemented */
+					"yaw_piston_A_temperature_out_of_range" : 1
 				},
 				{
-					"yaw_piston_B_temperature_out_of_range" : 1				/* yet to be implemented */
+					"yaw_piston_B_temperature_out_of_range" : 1
 				},
 				{
-					"yaw_piston_C_temperature_out_of_range" : 1					/* yet to be implemented */
+					"yaw_piston_C_temperature_out_of_range" : 1
 				},
 				{
-					"yaw_piston_D_temperature_out_of_range" : 1					/* yet to be implemented */
+					"yaw_piston_D_temperature_out_of_range" : 1
 				},
 				{
-					"brake_piston_A_temperature_out_of_range" : 1					/* yet to be implemented */
+					"brake_piston_A_temperature_out_of_range" : 1
 				},
 				{
-					"brake_piston_B_temperature_out_of_range" : 1					/* yet to be implemented */
+					"brake_piston_B_temperature_out_of_range" : 1
 				},
 				{
-					"brake_piston_C_temperature_out_of_range" : 1					/* yet to be implemented */
+					"brake_piston_C_temperature_out_of_range" : 1
 				},
 				{
-					"brake_piston_D_temperature_out_of_range" : 1					/* yet to be implemented */
+					"brake_piston_D_temperature_out_of_range" : 1
 				},
 				{
 					"hover_engine_A_temperature_out_of_range" : 1 /* yet to be implemented */
