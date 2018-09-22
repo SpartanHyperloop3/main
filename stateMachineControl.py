@@ -60,11 +60,19 @@ class stateMachineControl(object):
                     message = self.sock.recv_json()
                     #self.control.sendDataToControlStation(self.sock)
                     try:
-                        self.control.rawData.updateEntry(message[0], [message[1], message[2]])
-                        if message[3] == "logic":
-                            self.control.inputLogicQueue.put(message[0])
-                        elif message[3] == "broadcast":
-                            pass
+                        if message[0] == "logic":
+                            self.control.inputLogicQueue.put(message[1])
+                            self.control.rawData.updateEntry(message[1], [message[2], message[3]])
+                            #print message
+                        elif message[0] == "slave_state":
+                            print "got here"
+                            print message
+                            self.control.slaveStates.updateEntry(message[1], [message[2]])
+                        #self.control.rawData.updateEntry(message[0], [message[1], message[2]])
+                        #if message[3] == "logic":
+                        #    self.control.inputLogicQueue.put(message[0])
+                        #elif message[3] == "broadcast":
+                        #    pass
                         #if message[0] == "state_13_start_time":
                         #    print message[0],message[1],message[2]
                         #    print self.control.rawData.getCurrentTimeFor(message[0])
@@ -106,7 +114,7 @@ class stateMachineControl(object):
                 except Queue.Empty:
                     pass
                 try:
-                    dataName = self.control.inputLogicQueue.get(True, 1.0)
+                    dataName = self.control.inputLogicQueue.get(False)
                     inputStateNameList = self.control.inputLogicNameByDataName[dataName]
 
                     for inputStateName in inputStateNameList:
@@ -184,17 +192,10 @@ class stateMachineControl(object):
                         self.control.rawData.updateEntry("state_%s_start_time"%self.control.currentState, [self.control.currentState, time.time()])
                         print self.control.rawData.getCurrentTimeFor("state_%s_start_time"%self.control.currentState)
                         self.control.broadcastStateQueue.put(["state", self.control.currentState])
-                        self.clearTimeouts()
+                        self.control.clearTimeouts()
 
         def stop(self):
             self._killFlag.set()
-
-        def clearTimeouts(self):
-            for state in self.control.stateList:
-                if "state_%s_curr_time"%state in self.control.inputLogicNameByDataName.keys():
-                    for stateVariable in self.control.inputLogicNameByDataName["state_%s_curr_time"%state]:
-                        print stateVariable
-                        self.control.inputLogicState[stateVariable] = 0
 
 
 
@@ -234,7 +235,26 @@ class stateMachineControl(object):
                         #self.sock.send_json(["state", self.control.currentState])
                         print "sent",dataToSend
                         self.sock.send_json(dataToSend)
+
+                    slavesReady = False
+                    t = 0
+                    while slavesReady != True and t < 100:
+                        slavesReady = self.checkSlaveStates()
+                        time.sleep(0.01)
+                        t+=1
+                    if slavesReady == False:
+                        print "slaves not on same state"
+                        self.currentState = 13
+                        self.sock.send_json(["state", 13])
                     self.queue.task_done()
+
+        def checkSlaveStates(self):
+            for key in self.control.connections:
+                print key
+                if key != "master":
+                    if self.control.slaveStates.getCurrentReadingFor(key) != self.control.currentState:
+                        return False
+            return True
 
         def stop(self):
             self._killFlag.set()
@@ -258,7 +278,7 @@ class stateMachineControl(object):
                 self.control.rawData.updateEntry("state_%s_curr_time"%self.control.currentState, [self.control.currentState, currTime])
                 if "state_%s_curr_time"%self.control.currentState in self.control.inputLogicNameByDataName.keys():
                     self.control.inputLogicQueue.put("state_%s_curr_time"%self.control.currentState)
-                    print "got here",self.control.currentState
+                    #print "got here",self.control.currentState
                 time.sleep(1.0)
                 currTime = time.time()
 
@@ -299,6 +319,8 @@ class stateMachineControl(object):
         #storage for raw data
         self.rawData = dataController.dataController()
 
+        self.slaveStates = dataController.dataController()
+
         #work queue
         self.inputLogicQueue = Queue.Queue()
 
@@ -306,34 +328,25 @@ class stateMachineControl(object):
 
         self.updateSlaveStateQueue = Queue.Queue()
 
-        connections = {
-                "PI_1" : {
-                    "ip" : "192.168.10.2",
-                    "curent_state" : None
+        self.connections = {
+                "master" : {
+                    "ip" : "192.168.0.114"
                 },
-                "PI_2" : {
-                    "ip" : "192.168.10.3",
-                    "current_state" : None
-                },
-                "PI_3" : {
-                    "ip" : "192.168.10.4",
-                    "curent_state" : None
-                },
-                "PI_4" : {
-                    "ip" : "192.168.10.5",
-                    "current_state" : None
+                "PI_A" : {
+                    "ip" : "192.168.0.11"
                 }
         }
+        #sockets
+        context = zmq.Context()
+        self.incomingSocket = context.socket(zmq.SUB)
+        self.outgoingSocket = context.socket(zmq.PUB)
+
         #initialize threads
         self.consumerThread = self.consumerThread(self)
-        self.incomingDataThread = self.incomingDataThread(self, incomingSocket)
-        self.broadcastStateThread = self.broadcastStateThread(self, outgoingSocket, self.broadcastStateQueue)
+        self.incomingDataThread = self.incomingDataThread(self, self.incomingSocket)
+        self.broadcastStateThread = self.broadcastStateThread(self, self.outgoingSocket, self.broadcastStateQueue)
         self.stateUpdateThread = self.updateStateThread(self)
         self.timingThread = self.timingThread(self)
-        #sockets
-        self.incomingSocket = incomingSocket
-        self.outgoingSocket = outgoingSocket
-
 
         #JSON file parsing begins here, data is extracted for ease of use
         try:
@@ -430,8 +443,8 @@ class stateMachineControl(object):
             for key,val in cont.items():
                 self.sensorInfo[key] = val[1]["raw_data_names"]
             f.close()
-            
-            
+
+
             #print self.dataValuesPerInputState
             print self.inputLogicNameByDataName
 
@@ -459,6 +472,17 @@ class stateMachineControl(object):
             self.rawData.createNewEntry("state_%s_start_time"%state)
             self.rawData.createNewEntry("state_%s_curr_time"%state)
 
+    def createConnections(self):
+        self.outgoingSocket.bind("tcp://%s:6000"%self.connections["master"]["ip"])
+
+        for key,conn in self.connections.items():
+            if key != "master":
+                self.slaveStates.createNewEntry(key)
+                self.slaveStates.updateEntry(key,[self.currentState])
+                print key,conn,"tcp://%s:5000"%conn["ip"]
+                self.incomingSocket.connect("tcp://%s:5000"%conn["ip"])
+                self.incomingSocket.setsockopt(zmq.SUBSCRIBE, '')
+
     def startThreads(self):
         """Starts all threads, called in main"""
         self.timingThread.start()
@@ -466,6 +490,18 @@ class stateMachineControl(object):
         self.incomingDataThread.start()
         self.stateUpdateThread.start()
         self.broadcastStateThread.start()
+
+
+    def setOutputsByState(self):
+        pass
+
+
+    def clearTimeouts(self):
+        for state in self.stateList:
+            if "state_%s_curr_time"%state in self.control.inputLogicNameByDataName.keys():
+                for stateVariable in self.control.inputLogicNameByDataName["state_%s_curr_time"%state]:
+                    #print stateVariable
+                    self.control.inputLogicState[stateVariable] = 0
 
 
     def updateState(self, state):
@@ -524,15 +560,18 @@ class stateMachineControl(object):
 
                 #if not currLogic:
                 #print currLogic
-                for possibilities in currLogic:
-                    result = 1
-                    #evaluate AND logic
-                    for key,val in possibilities.items():
-                        if (self.inputLogicState[key] != val):
-                            result = 0
-                    #if the result is true, stop evaluating OR logic
-                    if result == 1:
-                        break
+                try:
+                    for possibilities in currLogic:
+                        result = 1
+                        #evaluate AND logic
+                        for key,val in possibilities.items():
+                            if (self.inputLogicState[key] != val):
+                                result = 0
+                        #if the result is true, stop evaluating OR logic
+                        if result == 1:
+                            break
+                except:
+                    result = 0
                 #if the all state transition is to take place and the current
                 #state doesn't already equal that state return true to signal a
                 #state change
@@ -624,13 +663,13 @@ class stateMachineControl(object):
             #print result
         return result
 
+
     def timeDifference(self, sensorName, params):
         startTime = self.rawData.getCurrentTimeFor(params[0])
         currTime = self.rawData.getCurrentTimeFor(sensorName)
 
         try:
             diff = currTime - startTime
-
         except:
             return 0
 
@@ -674,20 +713,11 @@ class stateMachineControl(object):
 
 
 if __name__ == "__main__":
-    sensorData = zmq.Context()
-
-    sensorDataSocket = sensorData.socket(zmq.SUB)
-
-    sensorDataSocket.connect("tcp://192.168.10.2:5000")
-    sensorDataSocket.setsockopt(zmq.SUBSCRIBE, '')
-
-    outSock = sensorData.socket(zmq.PUB)
-    outSock.bind("tcp://192.168.10.1:6000")
 
 
+    master = stateMachineControl(1, "nextStateInfo.json", "stateInputLogic.json")
 
-    master = stateMachineControl(1, "nextStateInfo.json", "stateInputLogic.json", sensorDataSocket, outSock)
-
+    master.createConnections()
 
     master.initialRawDataBase()
     master.startThreads()
