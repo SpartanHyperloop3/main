@@ -1,0 +1,157 @@
+{ 
+	"thread1" : [	
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.01
+		},
+		{
+			"PI_A_proximity_1" : {
+				"location" : 105, 
+			   	"pec" : 0,
+				"write" : [],
+				"read" : [48],
+				"data_length" : "block",
+				"data_type" : "pos",
+				"operations" : "R",
+				"data_processing_callback" : {
+					"function" : "proxRead",
+					"args" : []
+				}
+			}
+		}
+	],
+	"thread4" : [	
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.01
+		},
+		{
+			"PI_A_proximity_2" : {
+				"location" : 105, 
+			   	"pec" : 0,
+				"write" : [],
+				"read" : [80],
+				"data_length" : "block",
+				"data_type" : "pos",
+				"operations" : "R",
+				"data_processing_callback" : {
+					"function" : "proxRead",
+					"args" : []
+				}
+			}
+		}
+	],
+	"thread3" : [
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.01
+		},
+		{
+			"PI_A_temp_bms_1" : {
+				"location" : 105, 
+			   	"pec" : 0,
+				"write" : [],
+				"read" : [16],
+				"data_length" : "block",
+				"operations" : "R",
+				"data_type" : "pos",	
+				"data_processing_callback" : {
+					"function" : "thermistor100k",
+					"args" : [10000]
+				}
+			}
+		}
+	],   
+	"thread9" : [
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.01
+		},
+		{
+			"PI_A_voltage_1" : {
+				"location" : 106, 
+			   	"pec" : 0,
+				"write" : [],
+				"read" : [16],
+				"data_length" : "block",
+				"operations" : "R",
+				"data_type" : "pos",	
+				"data_processing_callback" : {
+					"function" : "BMSvoltage",
+					"args" : []
+				}
+			}
+		}
+	],   
+	"thread10" : [
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.01
+		},
+		{
+			"PI_A_current_1" : {
+				"location" : 106, 
+			   	"pec" : 0,
+				"write" : [],
+				"read" : [48],
+				"data_length" : "block",
+				"operations" : "R",
+				"data_type" : "pos",	
+				"data_processing_callback" : {
+					"function" : "batteryCurrent",
+					"args" : []
+				}
+			}
+		}
+	],   
+	"thread8" : [
+		{
+			"bus" : "i2c",
+			"sample_rate" : 0.01,
+			"init" : [
+				{
+					"pec" : 1,
+					"location" : 16,
+					"register" : 36, 
+					"data" : 4915,
+					"data_type" : "word"
+				},
+				{
+					"pec" : 1,
+					"location" : 17,
+					"register" : 36, 
+					"data" : 4915,
+					"data_type" : "word"
+				}
+			]
+		},
+		{
+			"PI_A_temp_hover_1" : {
+				"location" : 16, 
+			   	"pec" : 1,
+				"write" : [],
+				"read" : [7],
+				"data_length" : "word",
+				"operations" : "R",
+				"data_type" : "pos",	
+				"data_processing_callback" : {
+					"function" : "convertIRtemp",
+					"args" : []
+				}
+			},
+			"PI_A_temp_hover_2" : {
+				"location" : 17, 
+			   	"pec" : 1,
+				"write" : [],
+				"read" : [7],
+				"data_length" : "word",
+				"operations" : "R",
+				"data_type" : "pos",	
+				"data_processing_callback" : {
+					"function" : "convertIRtemp",
+					"args" : []
+				}
+			}
+		}
+	]
+}

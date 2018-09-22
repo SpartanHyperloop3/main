@@ -1,0 +1,10 @@
+{
+	"Emergency_Override" : {
+		"PUD" : "PUD_UP",
+		"location" : 7
+	},
+	"Enter_Manual_State" : {
+		"PUD" : "PUD_UP",
+		"location" : 25
+	}
+}
